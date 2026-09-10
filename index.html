@@ -6,6 +6,7 @@
     <title>Financial Education Platform</title>
     <!-- Include Chart.js for interactive charting -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="market-data.js"></script>
     <style>
         :root {
             --primary: #0a192f;
@@ -129,7 +130,7 @@
     <button class="tab-btn active" onclick="openTab('tab-home')">Home</button>
     <button class="tab-btn" onclick="openTab('tab-game')">1. Institutional Trading</button>
     <button class="tab-btn" onclick="openTab('tab-bias')">2. Cognitive Bias</button>
-    <button class="tab-btn" onclick="openTab('tab-gold')">3. Gold vs Inflation</button>
+    <button class="tab-btn" onclick="openTab('tab-gold')">3. Long-Term Asset Growth</button>
     <button class="tab-btn" onclick="openTab('tab-spy')">4. SPY Macros</button>
     <button class="tab-btn" onclick="openTab('tab-gambler')">5. Why gamblers lose</button>
     <button class="tab-btn" onclick="openTab('tab-poker')">6. Expected Value (Poker)</button>
@@ -222,8 +223,8 @@
 
     <!-- FUNCTION 3: GOLD & INFLATION -->
     <div id="tab-gold" class="tab-content">
-        <h2>3. Gold vs Inflation (1926 - 2026)</h2>
-        <p>Interactive Dual-Axis Chart showing Gold Prices vs Cumulative Inflation ($1 in 1926). <strong>Hover over the large data points</strong> to read the historical macro events.</p>
+        <h2>3. Long-Term Asset Growth (1926 - 2026)</h2>
+        <p>Historical growth of $100 compounded from annual returns for the S&amp;P 500, housing, bonds, gold, and cash purchasing power. The vertical axis is logarithmic. Housing and bond observations end in 2020.</p>
         <div class="chart-container">
             <canvas id="goldChart"></canvas>
         </div>
@@ -231,8 +232,8 @@
 
     <!-- FUNCTION 4: SPY EVENTS -->
     <div id="tab-spy" class="tab-content">
-        <h2>4. SPY Price Detailed Movement & Macro Events (2006 - 2026)</h2>
-        <p>Interactive Chart with monthly resolution: <strong>Green nodes = Positive Macros, Red nodes = Negative Macros, Black = Neutral.</strong> Hover over the large nodes to read the events.</p>
+        <h2>4. SPY Price and Macro Events (September 2016 - September 9, 2026)</h2>
+        <p>Actual month-end SPY closing prices derived from the supplied daily Nasdaq history. Event markers annotate the observed price series and never alter it.</p>
         <div class="chart-container">
             <canvas id="spyChart"></canvas>
         </div>
@@ -292,6 +293,7 @@
 
 </div>
 
+<footer style="max-width:1100px;margin:0 auto 30px;padding:18px 30px;color:#52606d;font-size:13px;text-align:center">Data sources and methodology: <a href="README_updated.md">README</a>. Data: <a href="investment_returns.csv">investment returns</a> and <a href="spy_historical.csv">SPY history</a>. Educational use only, not investment advice.</footer>
 <script>
     // --- CHART INSTANCES ---
     let goldChartInstance = null;
@@ -472,195 +474,32 @@
     loadBiasRound();
 
 
-    // --- FUNCTION 3: GOLD VS INFLATION CHART ---
+    // --- FUNCTIONS 3 & 4: HISTORICAL DATA CHARTS ---
+    function compoundSeries(key) {
+        let value = 100;
+        return window.INVESTMENT_RETURNS.map(row => {
+            const rate = row[key];
+            if (rate === null || rate === undefined) return null;
+            value *= (1 + rate / 100);
+            return Number(value.toFixed(2));
+        });
+    }
     function renderGoldChart() {
         const ctx = document.getElementById('goldChart').getContext('2d');
-        
-        // Generate Mock Data 1926-2026
-        const years = [];
-        const goldPrices = [];
-        const inflationData = [];
-        const events = {};
-        
-        let inf = 1.0; 
-        for(let i=1926; i<=2026; i++) {
-            years.push(i);
-            // Simulate inflation roughly based on historical US CPI mapping to $1 in 1926
-            if(i < 1933) inf *= 0.98; // Deflation
-            else if(i < 1971) inf *= 1.025; // Gradual
-            else if(i < 1982) inf *= 1.07; // High inflation
-            else if(i < 2020) inf *= 1.025; // Moderate
-            else inf *= 1.05; // Recent burst
-            inflationData.push(inf);
-            
-            // Gold prices mock
-            if(i < 1933) goldPrices.push(20.67);
-            else if(i < 1971) goldPrices.push(35);
-            else if(i === 1980) goldPrices.push(615);
-            else if(i === 1999) goldPrices.push(278);
-            else if(i === 2011) goldPrices.push(1571);
-            else if(i === 2020) goldPrices.push(1769);
-            else if(i === 2026) goldPrices.push(2350);
-            else {
-                // Interpolate loosely for visual curve
-                goldPrices.push(goldPrices[goldPrices.length-1] * (1 + (Math.random()*0.1 - 0.04))); 
-            }
-        }
-        
-        events[1933] = "Executive Order 6102 (Gold Confiscation)";
-        events[1971] = "Nixon Shock (End of Bretton Woods)";
-        events[1980] = "Volcker Rate Hikes / Inflation Peak";
-        events[2008] = "Great Financial Crisis / QE Begins";
-        events[2020] = "COVID-19 Stimulus & Expansion";
-
-        const pointColors = years.map(y => events[y] ? '#f44336' : 'rgba(0,119,182,0.2)');
-        const pointRadii = years.map(y => events[y] ? 8 : 2);
-
-        goldChartInstance = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: years,
-                datasets: [
-                    {
-                        label: 'Gold Price ($)',
-                        data: goldPrices,
-                        borderColor: '#FFD700',
-                        backgroundColor: '#FFD700',
-                        yAxisID: 'y',
-                        pointBackgroundColor: pointColors,
-                        pointRadius: pointRadii,
-                        pointHoverRadius: 10,
-                        tension: 0.2
-                    },
-                    {
-                        label: 'Purchasing Power Required to buy $1 from 1926',
-                        data: inflationData,
-                        borderColor: '#4caf50',
-                        backgroundColor: 'transparent',
-                        yAxisID: 'y1',
-                        borderDash: [5, 5],
-                        pointRadius: 0
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: { mode: 'index', intersect: false },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                let year = context.label;
-                                let value = context.parsed.y.toFixed(2);
-                                let out = `${label}: ${value}`;
-                                if (context.datasetIndex === 0 && events[year]) {
-                                    out = [out, `EVENT: ${events[year]}`];
-                                }
-                                return out;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: { title: { display: true, text: 'Year' } },
-                    y: { type: 'linear', display: true, position: 'left', title: {display: true, text: 'Gold Price ($/oz)'} },
-                    y1: { type: 'linear', display: true, position: 'right', title: {display: true, text: 'Inflation ($)'}, grid: {drawOnChartArea: false} }
-                }
-            }
-        });
+        const years = window.INVESTMENT_RETURNS.map(row => row.year);
+        const events = {1933:'US gold policy changed during the Great Depression',1971:'End of US dollar convertibility into gold',1980:'Inflation and gold cycle peak',2008:'Global Financial Crisis',2020:'COVID-19 shock and policy response'};
+        const specs = [['sp500','S&P 500','#0077b6'],['housing','Housing','#8e44ad'],['bond','Bonds','#00a676'],['gold','Gold','#d49b00'],['inflation','Cash purchasing power','#607d8b']];
+        goldChartInstance = new Chart(ctx,{type:'line',data:{labels:years,datasets:specs.map(([key,label,color])=>({label,data:compoundSeries(key),borderColor:color,backgroundColor:color,pointBackgroundColor:years.map(y=>events[y]?'#f44336':color),pointRadius:years.map(y=>events[y]?6:1.5),pointHoverRadius:7,spanGaps:false,borderWidth:key==='sp500'?3:2,tension:0.15}))},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{tooltip:{callbacks:{label:c=>`${c.dataset.label}: $${c.parsed.y.toLocaleString(undefined,{maximumFractionDigits:2})}`,afterBody:items=>{const y=items[0]?.label;return events[y]?`EVENT: ${events[y]}`:'';}}}},scales:{x:{title:{display:true,text:'Year'}},y:{type:'logarithmic',title:{display:true,text:'Growth of $100 (log scale)'},ticks:{callback:v=>'$'+Number(v).toLocaleString()}}}}});
     }
-
-    // --- FUNCTION 4: SPY CHART ---
     function renderSpyChart() {
         const ctx = document.getElementById('spyChart').getContext('2d');
-        const months = [];
-        const spyPrices = [];
-        const eventNodes = [];
-        const nodeColors = [];
-        const nodeRadii = [];
-        
-        let price = 120; // Approx 2006
-        let dateCounter = new Date(2006, 0, 1);
-        
-        const keyEvents = {
-            "2008-09": { text: "Lehman Bros Collapse", type: "negative", val: -15 },
-            "2009-03": { text: "GFC Bottom & QE1", type: "positive", val: 5 },
-            "2011-08": { text: "US Credit Downgrade", type: "negative", val: -10 },
-            "2016-11": { text: "US Election / Corporate Tax Cuts", type: "positive", val: 8 },
-            "2020-03": { text: "COVID-19 Crash", type: "negative", val: -25 },
-            "2020-11": { text: "Vaccine Announcement", type: "positive", val: 12 },
-            "2022-06": { text: "Aggressive Fed Rate Hikes (Inflation)", type: "negative", val: -15 },
-            "2023-11": { text: "AI Boom / Rates Pause", type: "positive", val: 15 }
-        };
-
-        for(let m = 0; m < 240; m++) { // 20 years * 12 months
-            let y = dateCounter.getFullYear();
-            let mo = String(dateCounter.getMonth() + 1).padStart(2, '0');
-            let dateKey = `${y}-${mo}`;
-            months.push(dateKey);
-            
-            let drift = price * 0.007; // upward drift
-            let noise = price * (Math.random() * 0.04 - 0.02);
-            
-            if (keyEvents[dateKey]) {
-                price += (price * (keyEvents[dateKey].val / 100));
-                eventNodes.push(keyEvents[dateKey].text);
-                nodeColors.push(keyEvents[dateKey].type === 'positive' ? '#4caf50' : '#f44336');
-                nodeRadii.push(8);
-            } else {
-                price += drift + noise;
-                eventNodes.push(null);
-                nodeColors.push('rgba(0,119,182,0.1)');
-                nodeRadii.push(2);
-            }
-            spyPrices.push(price);
-            
-            dateCounter.setMonth(dateCounter.getMonth() + 1);
-        }
-
-        spyChartInstance = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: months,
-                datasets: [{
-                    label: 'SPY Price ($)',
-                    data: spyPrices,
-                    borderColor: '#0a192f',
-                    backgroundColor: 'rgba(10, 25, 47, 0.1)',
-                    pointBackgroundColor: nodeColors,
-                    pointRadius: nodeRadii,
-                    pointHoverRadius: 10,
-                    fill: true,
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = `Price: $${context.parsed.y.toFixed(2)}`;
-                                let ev = eventNodes[context.dataIndex];
-                                if (ev) {
-                                    return [label, `EVENT: ${ev}`];
-                                }
-                                return label;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: { title: { display: true, text: 'Month' } },
-                    y: { title: { display: true, text: 'Price' } }
-                }
-            }
-        });
+        const labels = window.SPY_MONTHLY.map(row=>row.month);
+        const prices = window.SPY_MONTHLY.map(row=>row.close);
+        const events={'2016-11':{text:'US election',type:'neutral'},'2018-02':{text:'Volatility shock',type:'negative'},'2020-03':{text:'COVID-19 market crash',type:'negative'},'2020-11':{text:'Vaccine announcements',type:'positive'},'2022-03':{text:'Federal Reserve rate-hike cycle begins',type:'negative'},'2022-11':{text:'ChatGPT launch and generative-AI adoption cycle',type:'neutral'},'2023-11':{text:'Disinflation and rate-pause optimism',type:'positive'}};
+        const names=labels.map(m=>events[m]?.text||null);
+        const colors=labels.map(m=>events[m]?(events[m].type==='positive'?'#4caf50':events[m].type==='negative'?'#f44336':'#111'):'rgba(0,119,182,0.15)');
+        spyChartInstance=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'SPY Month-End Close ($)',data:prices,borderColor:'#0a192f',backgroundColor:'rgba(0,180,216,0.12)',pointBackgroundColor:colors,pointRadius:labels.map(m=>events[m]?7:1.5),pointHoverRadius:8,fill:true,tension:0.12,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{tooltip:{callbacks:{label:c=>`Close: $${c.parsed.y.toFixed(2)}`,afterLabel:c=>names[c.dataIndex]?`EVENT: ${names[c.dataIndex]}`:''}}},scales:{x:{title:{display:true,text:'Month'},ticks:{maxTicksLimit:14}},y:{title:{display:true,text:'SPY closing price ($)'}}}}});
     }
-
     // --- FUNCTION 5: GAMBLER'S RUIN LOGIC ---
     let gamblerWealth = 1000000;
     let trialCount = 0;
