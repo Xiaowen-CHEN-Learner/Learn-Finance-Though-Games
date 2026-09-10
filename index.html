@@ -1,10 +1,184 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My GitHub Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historical Stock Trading Game</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 24px;
+            border-bottom: 2px solid #eaeaea;
+            padding-bottom: 10px;
+        }
+        h2 {
+            font-size: 20px;
+            margin-top: 30px;
+            color: #2c3e50;
+        }
+        .meta-info {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .stock-price {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .stock-drop {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .tension-box, .position-box {
+            background-color: #f4f6f8;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            margin: 20px 0;
+        }
+        .trade-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+            transition: background-color 0.2s;
+            text-align: left;
+            max-width: 300px;
+        }
+        button:hover {
+            background-color: #e0e0e0;
+        }
+        button:disabled {
+            color: #999;
+            cursor: not-allowed;
+            background-color: #f0f0f0;
+        }
+        .warning {
+            color: #7f8c8d;
+            font-size: 14px;
+            font-style: italic;
+        }
+        #result-section {
+            display: none;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px dashed #bdc3c7;
+        }
+        .feedback-box {
+            background-color: #e8f5e9;
+            border-left: 4px solid #2e7d32;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello, World!</h1>
-    <p>Welcome to my website hosted on GitHub Pages.</p>
+
+<div class="container" id="game-container">
+    <h1>XOM Trading Game — Round 1 of 5</h1>
+    
+    <div class="meta-info">
+        Date: April 20, 2020 — market close
+    </div>
+
+    <div class="stock-price">Exxon Mobil (XOM): $41.18</div>
+    <div class="stock-drop">XOM fell 4.7% that day.</div>
+
+    <h2>What you know at this moment</h2>
+    <ul>
+        <li>The COVID-19 shutdown has caused an extraordinary collapse in transportation and petroleum demand. Earlier in April, the EIA was forecasting global liquid-fuels demand in April to be about <strong>17.1 million barrels/day below the 2019 average.</strong></li>
+        <li>Today, the expiring <strong>May WTI crude contract collapsed to -$37.63/barrel</strong>, the first negative settlement in history. Storage constraints and evaporating near-term demand were major factors. Importantly, June WTI remained around <strong>$20.43</strong>, so the negative price was partly a specific futures/storage dislocation rather than "all oil is worth -$37."</li>
+        <li>Exxon had already responded on April 7 by cutting planned 2020 capital spending <strong>30%, from $33 billion to about $23 billion</strong>, and targeted a <strong>15% reduction in cash operating expenses.</strong></li>
+        <li>There is one major potential positive: on April 12, OPEC+ agreed to cut crude production by <strong>9.7 million barrels/day beginning May 1</strong>, an unprecedented attempt to rebalance the market.</li>
+    </ul>
+
+    <div class="tension-box">
+        <h2>The tension</h2>
+        <p>The obvious textbook argument is:</p>
+        <p><strong>Oil collapse → lower upstream earnings/cash flow → bad for XOM.</strong></p>
+        <p>But you also know:</p>
+        <p><strong>XOM has already fallen sharply + spending is being cut + OPEC+ is responding + the negative WTI price partly reflects an expiring-contract/storage problem.</strong></p>
+        <p><em>You do <strong>not</strong> know what happens next.</em></p>
+    </div>
+
+    <div class="position-box">
+        <h2>Your position</h2>
+        <p id="shares-owned">Shares owned: 0</p>
+        <p>XOM price: $41.18</p>
+    </div>
+
+    <h2>Your trade</h2>
+    <p>Choose one:</p>
+    <div class="trade-options" id="trade-buttons">
+        <button onclick="makeTrade(100)">A. Buy 100 shares</button>
+        <button onclick="makeTrade(10)">B. Buy 10 shares</button>
+        <button onclick="makeTrade(0)">C. Do nothing — 0 shares</button>
+    </div>
+    <p class="warning">You cannot sell yet because you own no shares.</p>
+</div>
+
+<div class="container" id="result-section">
+    <h1>Round 1 Result & Analysis</h1>
+    <h2 id="trade-summary"></h2>
+    
+    <div class="feedback-box">
+        <h3>Decision Quality vs. Outcome Quality</h3>
+        <p><strong>The Outcome:</strong> In the short term following April 20, 2020, the panic subsided slightly as June contracts rolled over without going negative, and OPEC+ cuts began. By early June 2020, XOM rallied briefly back to the $50s, but then languished in the $30s through the fall of 2020 as the pandemic dragged on, before eventually beginning a massive multi-year bull run in 2021.</p>
+        <p><strong>The Evaluation:</strong> If you chose to buy, you recognized that the -$37 oil price was an anomaly of futures expiration, not a permanent state, and that the market had already priced in maximum pessimism. If you chose to do nothing, you made a rational choice to avoid catching a "falling knife" during unprecedented macroeconomic uncertainty.</p>
+        <p><em>Lesson: A perfectly rational decision based on available information can still result in short-term pain. We evaluate your play based on whether you weighed the knowns vs. unknowns properly, not just on what the chart did next.</em></p>
+    </div>
+    
+    <button onclick="location.reload()" style="background-color:#3498db; color:white; border:none; margin-top: 20px;">Restart Game</button>
+</div>
+
+<script>
+    function makeTrade(shares) {
+        // Disable buttons after making a choice
+        const buttons = document.querySelectorAll('#trade-buttons button');
+        buttons.forEach(btn => btn.disabled = true);
+
+        // Hide game section, show results
+        document.getElementById('game-container').style.display = 'none';
+        document.getElementById('result-section').style.display = 'block';
+
+        // Update result text based on choice
+        const summaryText = document.getElementById('trade-summary');
+        if (shares > 0) {
+            summaryText.innerText = `You bought ${shares} shares of XOM at $41.18.`;
+        } else {
+            summaryText.innerText = `You chose to do nothing and hold 0 shares.`;
+        }
+        
+        // In a full 5-round game, this function would instead append the new shares to a global 
+        // portfolio variable, and generate the HTML for "Round 2" dynamically.
+    }
+</script>
+
 </body>
 </html>
