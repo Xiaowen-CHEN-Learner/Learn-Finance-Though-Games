@@ -99,12 +99,16 @@
         
         /* Chart Styles */
         .chart-container { position: relative; height: 500px; width: 100%; margin-top: 20px;}
-        .gambler-controls { display: flex; gap: 10px; margin: 15px 0; }
-        .gambler-controls button { flex: 1; padding: 15px; font-size: 18px; font-weight: bold; cursor: pointer; border-radius: 8px; border: none; color: white;}
+        .gambler-controls { display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0; }
+        .gambler-controls button { flex: 1; padding: 15px; font-size: 16px; font-weight: bold; cursor: pointer; border-radius: 8px; border: none; color: white; min-width: 200px;}
         #btn-big { background-color: #2196F3; }
         #btn-small { background-color: #FF9800; }
+        #btn-big-10 { background-color: #1565C0; }
+        #btn-small-10 { background-color: #E65100; }
         #btn-big:hover { background-color: #1976D2; }
         #btn-small:hover { background-color: #F57C00; }
+        #btn-big-10:hover { background-color: #0D47A1; }
+        #btn-small-10:hover { background-color: #BF360C; }
         .ruined-msg { color: var(--danger); font-weight: bold; font-size: 20px; display: none; text-align: center; margin-top: 20px;}
         
         /* Poker Image */
@@ -219,7 +223,7 @@
     <!-- FUNCTION 3: GOLD & INFLATION -->
     <div id="tab-gold" class="tab-content">
         <h2>3. Gold vs Inflation (1926 - 2026)</h2>
-        <p>Interactive Dual-Axis Chart. <strong>Hover over the data points</strong> to read the historical relationship between the abandonment of the gold standard and US CPI YoY increases.</p>
+        <p>Interactive Dual-Axis Chart showing Gold Prices vs Cumulative Inflation ($1 in 1926). <strong>Hover over the large data points</strong> to read the historical macro events.</p>
         <div class="chart-container">
             <canvas id="goldChart"></canvas>
         </div>
@@ -228,7 +232,7 @@
     <!-- FUNCTION 4: SPY EVENTS -->
     <div id="tab-spy" class="tab-content">
         <h2>4. SPY Price Detailed Movement & Macro Events (2006 - 2026)</h2>
-        <p>Interactive Chart: <strong>Green nodes = Positive Macros, Red nodes = Negative Macros, Black = Neutral.</strong> Hover over the nodes to read the events.</p>
+        <p>Interactive Chart with monthly resolution: <strong>Green nodes = Positive Macros, Red nodes = Negative Macros, Black = Neutral.</strong> Hover over the large nodes to read the events.</p>
         <div class="chart-container">
             <canvas id="spyChart"></canvas>
         </div>
@@ -246,14 +250,16 @@
         
         <div id="gambler-active">
             <div class="gambler-controls">
-                <button id="btn-big" onclick="playGamble('big')">Bet BIG</button>
-                <button id="btn-small" onclick="playGamble('small')">Bet SMALL</button>
+                <button id="btn-big" onclick="playGamble('big', 1)">Bet BIG</button>
+                <button id="btn-small" onclick="playGamble('small', 1)">Bet SMALL</button>
+                <button id="btn-big-10" onclick="playGamble('big', 10)">Bet BIG (10x at once)</button>
+                <button id="btn-small-10" onclick="playGamble('small', 10)">Bet SMALL (10x at once)</button>
             </div>
         </div>
         
         <div id="gambler-ruined" class="ruined-msg">
-            <span id="gambler-ruined-text">You already lost 90% of your money! See from the casino side.</span><br><br>
-            <button class="btn-action" onclick="showCasinoChart()">Act as Casino (See Their Profits)</button>
+            <span id="gambler-ruined-text">You lost 90% of your money! Math and expense ratios eventually win.</span><br><br>
+            <button class="btn-action" onclick="resetGambler()">Reset Simulation</button>
         </div>
 
         <div class="chart-container" id="gambler-chart-wrapper">
@@ -287,6 +293,11 @@
 </div>
 
 <script>
+    // --- CHART INSTANCES ---
+    let goldChartInstance = null;
+    let spyChartInstance = null;
+    let gamblerChartInstance = null;
+
     // --- TAB NAVIGATION LOGIC ---
     function openTab(tabId) {
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -303,6 +314,7 @@
         if(tabId === 'tab-gold' && !goldChartInstance) renderGoldChart();
         if(tabId === 'tab-spy' && !spyChartInstance) renderSpyChart();
         if(tabId === 'tab-gambler' && !gamblerChartInstance) initGamblerChart();
+        if(tabId === 'tab-poker' && currentPoker === 0) loadPokerRound();
     }
 
     // --- FUNCTION 1: INVESTING GAME LOGIC ---
@@ -327,7 +339,6 @@
             document.getElementById('game-area').style.display = 'none';
             document.getElementById('game-end').style.display = 'block';
             
-            // Calculate % Win or % Loss
             let percentChange = ((portfolio - 10000) / 10000) * 100;
             let percentEl = document.getElementById('final-percentage');
             document.getElementById('final-score').innerText = `Final Portfolio Value: $${Math.round(portfolio).toLocaleString()}`;
@@ -407,7 +418,6 @@
             document.getElementById('bias-area').style.display = 'none';
             document.getElementById('bias-end').style.display = 'block';
             
-            // Generate Summary of wrong answers
             let summaryHTML = "<h3>Areas for Improvement:</h3><ul class='summary-list'>";
             let allCorrect = true;
             for(let i = 0; i < biasData.length; i++) {
@@ -434,14 +444,13 @@
         document.getElementById('bias-options').style.display = 'block';
         document.getElementById('bias-feedback').style.display = 'none';
         
-        // Hide previous button if on the first question
         let prevBtns = document.querySelectorAll('.btn-prev');
         prevBtns.forEach(btn => btn.style.display = (currentBias === 0) ? 'none' : 'inline-block');
     }
 
     function makeBiasDecision(index) {
         let data = biasData[currentBias];
-        userBiasAnswers[currentBias] = index; // Store Answer
+        userBiasAnswers[currentBias] = index;
         
         document.getElementById('bias-options').style.display = 'none';
         document.getElementById('bias-feedback').style.display = 'block';
@@ -463,30 +472,306 @@
     loadBiasRound();
 
 
+    // --- FUNCTION 3: GOLD VS INFLATION CHART ---
+    function renderGoldChart() {
+        const ctx = document.getElementById('goldChart').getContext('2d');
+        
+        // Generate Mock Data 1926-2026
+        const years = [];
+        const goldPrices = [];
+        const inflationData = [];
+        const events = {};
+        
+        let inf = 1.0; 
+        for(let i=1926; i<=2026; i++) {
+            years.push(i);
+            // Simulate inflation roughly based on historical US CPI mapping to $1 in 1926
+            if(i < 1933) inf *= 0.98; // Deflation
+            else if(i < 1971) inf *= 1.025; // Gradual
+            else if(i < 1982) inf *= 1.07; // High inflation
+            else if(i < 2020) inf *= 1.025; // Moderate
+            else inf *= 1.05; // Recent burst
+            inflationData.push(inf);
+            
+            // Gold prices mock
+            if(i < 1933) goldPrices.push(20.67);
+            else if(i < 1971) goldPrices.push(35);
+            else if(i === 1980) goldPrices.push(615);
+            else if(i === 1999) goldPrices.push(278);
+            else if(i === 2011) goldPrices.push(1571);
+            else if(i === 2020) goldPrices.push(1769);
+            else if(i === 2026) goldPrices.push(2350);
+            else {
+                // Interpolate loosely for visual curve
+                goldPrices.push(goldPrices[goldPrices.length-1] * (1 + (Math.random()*0.1 - 0.04))); 
+            }
+        }
+        
+        events[1933] = "Executive Order 6102 (Gold Confiscation)";
+        events[1971] = "Nixon Shock (End of Bretton Woods)";
+        events[1980] = "Volcker Rate Hikes / Inflation Peak";
+        events[2008] = "Great Financial Crisis / QE Begins";
+        events[2020] = "COVID-19 Stimulus & Expansion";
+
+        const pointColors = years.map(y => events[y] ? '#f44336' : 'rgba(0,119,182,0.2)');
+        const pointRadii = years.map(y => events[y] ? 8 : 2);
+
+        goldChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: years,
+                datasets: [
+                    {
+                        label: 'Gold Price ($)',
+                        data: goldPrices,
+                        borderColor: '#FFD700',
+                        backgroundColor: '#FFD700',
+                        yAxisID: 'y',
+                        pointBackgroundColor: pointColors,
+                        pointRadius: pointRadii,
+                        pointHoverRadius: 10,
+                        tension: 0.2
+                    },
+                    {
+                        label: 'Purchasing Power Required to buy $1 from 1926',
+                        data: inflationData,
+                        borderColor: '#4caf50',
+                        backgroundColor: 'transparent',
+                        yAxisID: 'y1',
+                        borderDash: [5, 5],
+                        pointRadius: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                let year = context.label;
+                                let value = context.parsed.y.toFixed(2);
+                                let out = `${label}: ${value}`;
+                                if (context.datasetIndex === 0 && events[year]) {
+                                    out = [out, `EVENT: ${events[year]}`];
+                                }
+                                return out;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Year' } },
+                    y: { type: 'linear', display: true, position: 'left', title: {display: true, text: 'Gold Price ($/oz)'} },
+                    y1: { type: 'linear', display: true, position: 'right', title: {display: true, text: 'Inflation ($)'}, grid: {drawOnChartArea: false} }
+                }
+            }
+        });
+    }
+
+    // --- FUNCTION 4: SPY CHART ---
+    function renderSpyChart() {
+        const ctx = document.getElementById('spyChart').getContext('2d');
+        const months = [];
+        const spyPrices = [];
+        const eventNodes = [];
+        const nodeColors = [];
+        const nodeRadii = [];
+        
+        let price = 120; // Approx 2006
+        let dateCounter = new Date(2006, 0, 1);
+        
+        const keyEvents = {
+            "2008-09": { text: "Lehman Bros Collapse", type: "negative", val: -15 },
+            "2009-03": { text: "GFC Bottom & QE1", type: "positive", val: 5 },
+            "2011-08": { text: "US Credit Downgrade", type: "negative", val: -10 },
+            "2016-11": { text: "US Election / Corporate Tax Cuts", type: "positive", val: 8 },
+            "2020-03": { text: "COVID-19 Crash", type: "negative", val: -25 },
+            "2020-11": { text: "Vaccine Announcement", type: "positive", val: 12 },
+            "2022-06": { text: "Aggressive Fed Rate Hikes (Inflation)", type: "negative", val: -15 },
+            "2023-11": { text: "AI Boom / Rates Pause", type: "positive", val: 15 }
+        };
+
+        for(let m = 0; m < 240; m++) { // 20 years * 12 months
+            let y = dateCounter.getFullYear();
+            let mo = String(dateCounter.getMonth() + 1).padStart(2, '0');
+            let dateKey = `${y}-${mo}`;
+            months.push(dateKey);
+            
+            let drift = price * 0.007; // upward drift
+            let noise = price * (Math.random() * 0.04 - 0.02);
+            
+            if (keyEvents[dateKey]) {
+                price += (price * (keyEvents[dateKey].val / 100));
+                eventNodes.push(keyEvents[dateKey].text);
+                nodeColors.push(keyEvents[dateKey].type === 'positive' ? '#4caf50' : '#f44336');
+                nodeRadii.push(8);
+            } else {
+                price += drift + noise;
+                eventNodes.push(null);
+                nodeColors.push('rgba(0,119,182,0.1)');
+                nodeRadii.push(2);
+            }
+            spyPrices.push(price);
+            
+            dateCounter.setMonth(dateCounter.getMonth() + 1);
+        }
+
+        spyChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'SPY Price ($)',
+                    data: spyPrices,
+                    borderColor: '#0a192f',
+                    backgroundColor: 'rgba(10, 25, 47, 0.1)',
+                    pointBackgroundColor: nodeColors,
+                    pointRadius: nodeRadii,
+                    pointHoverRadius: 10,
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = `Price: $${context.parsed.y.toFixed(2)}`;
+                                let ev = eventNodes[context.dataIndex];
+                                if (ev) {
+                                    return [label, `EVENT: ${ev}`];
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Month' } },
+                    y: { title: { display: true, text: 'Price' } }
+                }
+            }
+        });
+    }
+
+    // --- FUNCTION 5: GAMBLER'S RUIN LOGIC ---
+    let gamblerWealth = 1000000;
+    let trialCount = 0;
+    let historyX = [0];
+    let historyY = [1000000];
+
+    function initGamblerChart() {
+        const ctx = document.getElementById('gamblerChart').getContext('2d');
+        gamblerChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: historyX,
+                datasets: [{
+                    label: 'Remaining Wealth ($)',
+                    data: historyY,
+                    borderColor: '#00b4d8',
+                    backgroundColor: 'rgba(0, 180, 216, 0.2)',
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: 'Number of Gambles' } },
+                    y: { title: { display: true, text: 'Wealth ($)' }, beginAtZero: true }
+                }
+            }
+        });
+    }
+
+    function playGamble(choice, times) {
+        if (gamblerWealth <= 100000) return; // Prevent playing if ruined
+
+        for(let i=0; i<times; i++) {
+            if (gamblerWealth <= 100000) {
+                break;
+            }
+            
+            let wager = gamblerWealth * 0.10; // Must wager 10%
+            let expense = wager * 0.01;       // 1% hidden cost/expense ratio
+            
+            gamblerWealth -= expense; 
+            
+            let isWin = Math.random() < 0.5; // True 50/50 chance
+            
+            if (isWin) {
+                gamblerWealth += wager;
+            } else {
+                gamblerWealth -= wager;
+            }
+            
+            trialCount++;
+            historyX.push(trialCount);
+            historyY.push(gamblerWealth);
+        }
+
+        document.getElementById('gamble-count').innerText = trialCount;
+        document.getElementById('gambler-wealth').innerText = `Your Wealth: $${Math.round(gamblerWealth).toLocaleString()}`;
+        
+        if(gamblerChartInstance) {
+            gamblerChartInstance.update();
+        }
+        
+        // Ruin Condition (lost 90%)
+        if (gamblerWealth <= 100000) {
+            document.getElementById('gambler-active').style.display = 'none';
+            document.getElementById('gambler-ruined').style.display = 'block';
+        }
+    }
+
+    function resetGambler() {
+        gamblerWealth = 1000000;
+        trialCount = 0;
+        historyX = [0];
+        historyY = [1000000];
+        document.getElementById('gamble-count').innerText = trialCount;
+        document.getElementById('gambler-wealth').innerText = `Your Wealth: $1,000,000`;
+        document.getElementById('gambler-active').style.display = 'block';
+        document.getElementById('gambler-ruined').style.display = 'none';
+        
+        if (gamblerChartInstance) {
+            gamblerChartInstance.data.labels = historyX;
+            gamblerChartInstance.data.datasets[0].data = historyY;
+            gamblerChartInstance.update();
+        }
+    }
+
+
     // --- FUNCTION 6: POKER DECISIONS WITH IMAGES ---
     let currentPoker = 0;
     const pokerData = [
         { q: "The pot is $100. Opponent bets $20. You must call $20 to win $120 total. You estimate you have a 25% chance of hitting your winning flush on the river. EV?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Pot:+$100+%7C+Bet:+$20", opts: ["Call (+EV)", "Fold (-EV)"], correct: 0, explain: "Pot odds: Pay $20 to win $120 (14.2% equity needed). 25% equity > 14.2% needed, so calling is highly profitable (+EV)." },
         { q: "Pre-flop. You hold AKo. Opponent reveals QQ. Equity in this exact spot?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=AK+vs+QQ+(Coin+Flip)", opts: ["~20%", "~43%", "~60%"], correct: 1, explain: "43%. The classic 'Coin Flip'. The made pair (QQ) is a slight favorite (approx 57%) over two overcards pre-flop." },
-        { q: "Pre-flop. You hold AA. Opponent holds KK. Win rate for Aces?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Pocket+Aces+vs+Pocket+Kings", opts: ["~65%", "~81%", "~95%"], correct: 1, explain: "81%. Aces dominate Kings pre-flop. KK only has two outs (the other two Kings)." },
-        { q: "Flop action: Open-ended straight draw. Opponent all-in. You have 31% equity. Pot odds require 35%. You fold. Runout happens, and you WOULD have hit your straight. Bad decision?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=31%25+Equity+vs+35%25+Required", opts: ["Yes, trust gut", "No, mathematically correct"], correct: 1, explain: "No. Separate decision quality from outcome. Long term, calling without proper equity loses money." },
-        { q: "You hold 7-8 suited. Flop comes 5-6-9 of different suits. You have a straight! Opponent goes all-in. How many 'outs' does opponent have to beat you if they hold a set of 5s?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Made+Straight+vs+Flopped+Set", opts: ["None", "7 outs", "10 outs (Full House/Quads)"], correct: 2, explain: "They need the board to pair (or hit the last 5). The board has 3 remaining cards of the 5s, 6s, and 9s, plus the remaining 5s. Roughly 7-10 outs to hit a full house or quads by river." },
-        { q: "Pot is $200. You are first to act on the river. You have a 'busted' draw (0% chance to win at showdown). If you bluff $100, what percentage of the time must the opponent fold for your bluff to break even?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Bluffing:+$100+to+win+$200", opts: ["33%", "50%", "66%"], correct: 0, explain: "Risking $100 to win $200. Breakeven = Risk / (Risk + Reward) = 100 / 300 = 33.3%." },
-        { q: "You have JJ. Flop is A-K-2. Opponent bets aggressively. Does your equity generally go up or down?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Jacks+vs+A-K-2+Board", opts: ["Up", "Down"], correct: 1, explain: "Down. The presence of multiple overcards heavily favors your opponent's range." },
-        { q: "Pot odds are 4:1. You calculate your hand equity is 15%. Should you call?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Pot+Odds:+4:1", opts: ["Yes", "No"], correct: 1, explain: "4:1 odds means you need 1 / (4+1) = 20% equity to breakeven. Since 15% < 20%, it is a -EV fold." },
-        { q: "Expected Value formula: EV = (Probability of Win * Amount Won) - (Probability of Loss * Amount Lost). Pot is $50. Bet is $10. Win probability is 20%. EV?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Calculate+Expected+Value", opts: ["+$2", "-$2", "$0"], correct: 0, explain: "(0.20 * $50) - (0.80 * $10) = $10 - $8 = +$2." },
-        { q: "In game theory, playing a strategy that makes your opponent indifferent to calling or folding is called:", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Game+Theory+Concept", opts: ["GTO (Game Theory Optimal)", "Exploitative Strategy", "Tilt"], correct: 0, explain: "GTO aims to create perfectly balanced ranges so opponents cannot mathematically exploit you." }
+        { q: "Pre-flop. You hold AA. Opponent holds KK. Win rate for Aces?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Pocket+Aces+vs+Pocket+Kings", opts: ["~65%", "~81%", "~95%"], correct: 1, explain: "81%. Aces dominate Kings pre-flop. KK only has two outs (the other two Kings) to win, making AA an overwhelming favorite." },
+        { q: "You hold an open-ended straight draw (8 outs) on the turn. What is roughly your probability of hitting the straight on the river?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Open-Ended+Straight+Draw", opts: ["~8%", "~17%", "~32%"], correct: 1, explain: "17%. Rule of 2: Multiply your outs (8) by 2 for one street. 8 x 2 = 16% (roughly 17.4% exact)." }
     ];
+
     function loadPokerRound() {
         if(currentPoker >= pokerData.length) {
             document.getElementById('poker-area').style.display = 'none';
             document.getElementById('poker-end').style.display = 'block';
             return;
         }
+        
         let data = pokerData[currentPoker];
-        document.getElementById('poker-q-num').innerText = `Scenario ${currentPoker + 1} of ${pokerData.length}`;
+        document.getElementById('poker-q-num').innerText = `Hand ${currentPoker + 1} of ${pokerData.length}`;
         document.getElementById('poker-img').src = data.img;
         document.getElementById('poker-scenario').innerText = data.q;
+        
         let optsHtml = "";
         data.opts.forEach((opt, index) => {
             optsHtml += `<button onclick="makePokerDecision(${index})">${opt}</button>`;
@@ -495,271 +780,26 @@
         document.getElementById('poker-options').style.display = 'block';
         document.getElementById('poker-feedback').style.display = 'none';
     }
+
     function makePokerDecision(index) {
         let data = pokerData[currentPoker];
         document.getElementById('poker-options').style.display = 'none';
         document.getElementById('poker-feedback').style.display = 'block';
-        let resHTML = document.getElementById('poker-result');
-        if (index === data.correct) {
-            resHTML.innerText = "Correct Valuation!";
-            resHTML.style.color = "var(--success)";
+        
+        let resText = document.getElementById('poker-result');
+        if(index === data.correct) {
+            resText.innerText = "Solid Play!";
+            resText.style.color = "var(--success)";
         } else {
-            resHTML.innerText = "Incorrect.";
-            resHTML.style.color = "var(--danger)";
+            resText.innerText = "Miscalculated.";
+            resText.style.color = "var(--danger)";
         }
-        document.getElementById('poker-explanation').innerText = data.explain;
+        document.getElementById('poker-explanation').innerHTML = `<strong>Analysis:</strong> ${data.explain}`;
     }
+    
     function nextPoker() { currentPoker++; loadPokerRound(); }
     function resetPoker() { currentPoker = 0; document.getElementById('poker-end').style.display = 'none'; document.getElementById('poker-area').style.display = 'block'; loadPokerRound(); }
-    loadPokerRound();
 
-
-    // --- FUNCTION 5: GAMBLER'S RUIN LOGIC ---
-    let gamblerMoney = 1000000;
-    let casinoMoney = 0;
-    let gambleCount = 0;
-    let historyGambler = [1000000];
-    let historyCasino = [0];
-    let gamblerLabels = [0];
-    let gamblerChartInstance = null;
-
-    function initGamblerChart() {
-        const ctx = document.getElementById('gamblerChart').getContext('2d');
-        gamblerChartInstance = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: gamblerLabels,
-                datasets: [{
-                    label: 'Gambler Wealth ($)',
-                    data: historyGambler,
-                    borderColor: '#FF9800',
-                    backgroundColor: 'rgba(255, 152, 0, 0.1)',
-                    fill: true,
-                    tension: 0.2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: { beginAtZero: true, title: { display: true, text: 'USD ($)' } },
-                    x: { title: { display: true, text: 'Trials' } }
-                }
-            }
-        });
-    }
-
-    function playGamble(choice) {
-        if(gamblerMoney <= 100000) return; // Ruined (90% loss)
-
-        let bet = gamblerMoney * 0.10; 
-        let fee = bet * 0.01;          
-        
-        gamblerMoney -= fee;
-        casinoMoney += fee;
-        
-        let win = (Math.random() < 0.5); 
-        
-        if (win) {
-            gamblerMoney += bet; 
-            casinoMoney -= bet;
-        } else {
-            gamblerMoney -= bet;
-            casinoMoney += bet;
-        }
-
-        gambleCount++;
-        gamblerLabels.push(gambleCount);
-        historyGambler.push(gamblerMoney > 0 ? gamblerMoney : 0);
-        historyCasino.push(casinoMoney);
-
-        document.getElementById('gamble-count').innerText = gambleCount;
-        document.getElementById('gambler-wealth').innerText = `Your Wealth: $${Math.max(0, Math.round(gamblerMoney)).toLocaleString()}`;
-
-        gamblerChartInstance.update();
-
-        // Check for 90% loss
-        if (gamblerMoney <= 100000) {
-            document.getElementById('gambler-active').style.display = 'none';
-            document.getElementById('gambler-ruined').style.display = 'block';
-        }
-    }
-
-    function showCasinoChart() {
-        gamblerChartInstance.data.datasets = [{
-            label: 'Casino Accumulated Profit ($)',
-            data: historyCasino,
-            borderColor: '#2e7d32',
-            backgroundColor: 'rgba(46, 125, 50, 0.1)',
-            fill: true,
-            tension: 0.2
-        }];
-        gamblerChartInstance.update();
-        document.getElementById('gambler-ruined').innerHTML = "Notice how the Casino smoothly generates profit over time due to the law of large numbers and the inherent mathematical edge (Expense Ratio).";
-    }
-
-    // --- CHARTS LOGIC (FUNCTIONS 3 & 4) ---
-    let goldChartInstance = null;
-    let spyChartInstance = null;
-
-    function renderGoldChart() {
-        const ctx = document.getElementById('goldChart').getContext('2d');
-        
-        let years = [];
-        let goldPrices = [];
-        let cpiYoY = []; // Changed to YoY
-        
-        // Simulating data roughly modeling 1926 - 2026
-        let currentGold = 20.67; 
-        for(let y=1926; y<=2026; y++){
-            years.push(y);
-            let yoy = 2.0; // Default YoY %
-            
-            if(y < 1971) {
-                currentGold = y < 1934 ? 20.67 : 35.00; 
-                yoy = (y === 1930 || y === 1932) ? -5.0 : (y === 1942 || y === 1946) ? 8.5 : 1.5;
-            } else if (y >= 1971 && y < 1982) {
-                currentGold *= 1.35; 
-                yoy = (y === 1974 || y === 1979) ? 12.0 : 8.5; // Big Inflation spikes
-            } else if (y >= 1982 && y < 2000) {
-                currentGold = Math.max(250, currentGold * 0.95);
-                yoy = 3.5;
-            } else if (y >= 2000 && y < 2012) {
-                currentGold *= 1.15;
-                yoy = (y === 2008) ? 0.1 : 2.5;
-            } else {
-                currentGold *= 1.04;
-                yoy = (y === 2022) ? 8.0 : (y === 2024) ? 3.1 : 2.0;
-            }
-            goldPrices.push(currentGold);
-            cpiYoY.push(yoy);
-        }
-
-        goldChartInstance = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: years,
-                datasets: [
-                    {
-                        label: 'Gold Price (USD/oz)',
-                        data: goldPrices,
-                        borderColor: '#FFC107',
-                        yAxisID: 'y',
-                        pointRadius: 1,
-                        tension: 0.1
-                    },
-                    {
-                        label: 'US CPI YoY (%)',
-                        data: cpiYoY,
-                        borderColor: '#F44336',
-                        yAxisID: 'y1',
-                        pointRadius: 1,
-                        tension: 0.1
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: { mode: 'index', intersect: false },
-                scales: {
-                    x: { title: { display: true, text: 'Year (Detailed)' } },
-                    y: { type: 'linear', display: true, position: 'left', title: {display: true, text: 'Gold ($)'} },
-                    y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false }, title: {display: true, text: 'CPI YoY (%)'} },
-                },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            afterLabel: function(context) {
-                                let year = context.parsed.x + 1926;
-                                if(year === 1933) return "Executive Order 6102: Gold Confiscation";
-                                if(year === 1971) return "Nixon Shock: End of Gold Standard";
-                                if(year === 1974 || year === 1979) return "Massive 70s Stagflation Spikes";
-                                if(year === 1980) return "Volcker Rate Hikes Kill Inflation";
-                                if(year === 2008) return "Global Financial Crisis / Deflationary Fear";
-                                if(year === 2020) return "COVID Pandemic / Trillions Printed";
-                                if(year === 2022) return "40-Year Inflation Highs (8%+)";
-                                return "";
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    function renderSpyChart() {
-        const ctx = document.getElementById('spyChart').getContext('2d');
-        
-        let years = [];
-        let spyPrices = [
-            130, 145, 90, 110, 125, // 2006-2010
-            125, 142, 184, 205, 204, // 2011-2015
-            223, 267, 250, 323, 370, // 2016-2020
-            476, 383, 470, 510, 520, 530 // 2021-2026
-        ];
-        
-        let pointColors = [];
-        for(let y=2006; y<=2026; y++){
-            years.push(y);
-            
-            // Assign specific colors for Macro Events
-            if (y === 2008 || y === 2011 || y === 2018 || y === 2020 || y === 2022) {
-                pointColors.push('red'); // Negative Macros
-            } else if (y === 2009 || y === 2013 || y === 2021 || y === 2024 || y === 2026) {
-                pointColors.push('green'); // Positive Macros
-            } else {
-                pointColors.push('black'); // Neutral
-            }
-        }
-
-        spyChartInstance = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: years,
-                datasets: [{
-                    label: 'SPY ETF Price ($)',
-                    data: spyPrices,
-                    borderColor: '#00b4d8',
-                    backgroundColor: 'rgba(0, 180, 216, 0.1)',
-                    fill: true,
-                    tension: 0.3,
-                    pointRadius: 6,
-                    pointHoverRadius: 9,
-                    pointBackgroundColor: pointColors,
-                    pointBorderColor: pointColors
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: { beginAtZero: false, title: { display: true, text: 'Price ($)' } },
-                    x: { title: { display: true, text: 'Year' } }
-                },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            afterLabel: function(context) {
-                                let year = context.label;
-                                if(year == "2008") return "Negative: Subprime Mortgage Crisis Peak";
-                                if(year == "2009") return "Positive: QE1 Begins, Market Bottoms";
-                                if(year == "2011") return "Negative: US Debt Downgrade Flash Crash";
-                                if(year == "2013") return "Positive: Taper Tantrum resolved, massive bull run";
-                                if(year == "2018") return "Negative: US-China Trade War & Rate Hikes";
-                                if(year == "2020") return "Negative: COVID-19 Global Pandemic Shutdown";
-                                if(year == "2021") return "Positive: Meme Stocks & Stimulus Peak";
-                                if(year == "2022") return "Negative: Fed Funds Rate Aggressive Hiking Cycle";
-                                if(year == "2024") return "Positive: AI Boom & Rate Cut Anticipation";
-                                return "Neutral: Standard Market Flow";
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
 </script>
-
 </body>
 </html>
