@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn Finance Through Games — V2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<header class="site-header">
+    <div class="brand">
+        <span class="brand-mark" aria-hidden="true">FE</span>
+        <div>
+            <h1>FinEdu Platform <span class="version-badge">V2</span></h1>
+            <p class="tagline">Institutional-grade market training, reimagined</p>
+        </div>
+    </div>
+    <div class="progress-widget" id="progress-widget">
+        <div class="level-info">
+            <span class="level-label" id="level-label">Retail Investor</span>
+            <div class="xp-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="xp-bar"><div class="xp-bar-fill" id="xp-bar-fill"></div></div>
+        </div>
+        <button class="btn-ghost btn-sm" id="reset-progress-btn" type="button">Reset progress</button>
+    </div>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="Learning modules">
+    <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="tab-home" id="tabbtn-home" data-tab="tab-home">Home</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-trading" tabindex="-1" id="tabbtn-trading" data-tab="tab-trading">1. Event-Driven Trading</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-bias" tabindex="-1" id="tabbtn-bias" data-tab="tab-bias">2. Cognitive Bias</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-growth" tabindex="-1" id="tabbtn-growth" data-tab="tab-growth">3. Long-Term Asset Growth</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-spy" tabindex="-1" id="tabbtn-spy" data-tab="tab-spy">4. SPY Macro Events</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-gambler" tabindex="-1" id="tabbtn-gambler" data-tab="tab-gambler">5. Gambler's Ruin</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-poker" tabindex="-1" id="tabbtn-poker" data-tab="tab-poker">6. Expected Value (Poker)</button>
+</nav>
+
+<main id="main" class="container">
+
+    <!-- HOME -->
+    <section id="tab-home" class="tab-panel active" role="tabpanel" aria-labelledby="tabbtn-home">
+        <div class="hero">
+            <h2>Master the Markets. Test Your Psychology.</h2>
+            <p>An interactive simulator for finance students: learn how macroeconomic events drive asset prices, test your statistical intuition, and confront your own cognitive biases — using real historical data, not simulated charts.</p>
+            <button class="btn-action" type="button" onclick="App.openTab('tab-trading')">Start the Trading Simulator</button>
+        </div>
+
+        <div class="grid-features">
+            <button class="feature-card" type="button" onclick="App.openTab('tab-trading')">
+                <h3>Event-Driven Trading <span data-module-badge="trading"></span></h3>
+                <p>Manage a $10,000 portfolio through 10 historic macroeconomic shocks and get a capital-preservation report card.</p>
+            </button>
+            <button class="feature-card" type="button" onclick="App.openTab('tab-bias')">
+                <h3>Cognitive Bias <span data-module-badge="bias"></span></h3>
+                <p>Spot the cognitive biases behind 10 common investor traps, with a missed-concept review at the end.</p>
+            </button>
+            <button class="feature-card" type="button" onclick="App.openTab('tab-growth')">
+                <h3>Long-Term Asset Growth <span data-module-badge="growth"></span></h3>
+                <p>Growth of $100 since 1926 across stocks, housing, bonds, gold, and cash — from the real annual-returns dataset.</p>
+            </button>
+            <button class="feature-card" type="button" onclick="App.openTab('tab-spy')">
+                <h3>SPY Macro Events <span data-module-badge="spy"></span></h3>
+                <p>Ten years of actual SPY closing prices with macro events annotated — the events never alter the price line.</p>
+            </button>
+            <button class="feature-card" type="button" onclick="App.openTab('tab-gambler')">
+                <h3>Gambler's Ruin <span data-module-badge="gambler"></span></h3>
+                <p>Experience how a hidden 1% cost turns a fair 50/50 game into a losing one, then prove you understand why.</p>
+            </button>
+            <button class="feature-card" type="button" onclick="App.openTab('tab-poker')">
+                <h3>Expected Value (Poker) <span data-module-badge="poker"></span></h3>
+                <p>Pot odds, preflop equities, and outs — think like a quant using Texas Hold'em decisions.</p>
+            </button>
+        </div>
+
+        <div class="progress-summary">
+            <h3>Your Progress</h3>
+            <p style="color:var(--color-text-muted);margin:0;">Levels reward completing modules <em>and</em> your best score in each — not risk-taking. Progress is saved on this device only.</p>
+            <div class="level-ladder" id="level-ladder"></div>
+        </div>
+    </section>
+
+    <!-- MODULE 1: TRADING -->
+    <section id="tab-trading" class="tab-panel" role="tabpanel" aria-labelledby="tabbtn-trading">
+        <h2>1. Event-Driven Trading</h2>
+        <p class="module-intro">Ten historic macro shocks. Each decision is scored on capital preservation and risk posture — not just on whether it happened to work out.</p>
+        <div id="game-area">
+            <div class="stats">
+                <span id="round-counter">Round 1 of 10</span>
+                <span class="round-dots" id="trading-round-dots" aria-hidden="true"></span>
+                <span id="portfolio-value">Portfolio Value: $10,000</span>
+            </div>
+            <h3 id="game-date"></h3>
+            <div class="scenario-box">
+                <div id="game-scenario"></div>
+                <div class="metrics-grid" id="game-metrics"></div>
+            </div>
+            <div class="options" id="game-options"></div>
+            <div class="feedback" id="game-feedback" aria-live="polite">
+                <h3>Outcome & Analysis</h3>
+                <p id="feedback-text"></p>
+                <button class="btn-action" type="button" id="next-round-btn">Next Round</button>
+            </div>
+        </div>
+        <div id="game-end" style="display:none; text-align:center;">
+            <h2>Simulation Complete!</h2>
+            <h3 id="final-score" style="font-size:28px;margin-bottom:5px;"></h3>
+            <div id="final-percentage" style="font-size:22px;font-weight:bold;margin-bottom:10px;"></div>
+            <div id="trading-report-card" class="report-card"></div>
+            <div id="trading-profile"></div>
+            <p style="color:var(--color-text-muted);">A simple "Buy and Hold" strategy would have captured standard market returns without any of these decisions — active management only adds value when it beats that baseline.</p>
+            <button class="btn-action" type="button" id="trading-replay-btn">Play Again</button>
+        </div>
+    </section>
+
+    <!-- MODULE 2: BIAS -->
+    <section id="tab-bias" class="tab-panel" role="tabpanel" aria-labelledby="tabbtn-bias">
+        <h2>2. Behavioral Finance: Bias Identification</h2>
+        <p class="module-intro">Decide whether the investor is acting rationally or falling victim to a specific cognitive bias.</p>
+        <div id="bias-area">
+            <h3 id="bias-q-num"></h3>
+            <div class="xp-bar" style="width:100%;max-width:300px;margin-bottom:16px;"><div class="xp-bar-fill" id="bias-progress-fill"></div></div>
+            <div class="scenario-box" id="bias-scenario"></div>
+            <div class="options" id="bias-options"></div>
+            <div style="margin-top:15px;">
+                <button class="btn-action btn-prev" type="button">Previous Question</button>
+            </div>
+            <div class="feedback" id="bias-feedback" aria-live="polite">
+                <h3 id="bias-result"></h3>
+                <p id="bias-explanation"></p>
+                <button class="btn-action btn-prev" type="button">Previous Question</button>
+                <button class="btn-action" type="button" id="bias-next-btn">Next Question</button>
+            </div>
+        </div>
+        <div id="bias-end" style="display:none; text-align:center;">
+            <h2>Bias Assessment Complete!</h2>
+            <div id="bias-summary-area"></div>
+            <br>
+            <button class="btn-action" type="button" id="bias-retake-btn">Retake Assessment</button>
+        </div>
+    </section>
+
+    <!-- MODULE 3: GROWTH -->
+    <section id="tab-growth" class="tab-panel" role="tabpanel" aria-labelledby="tabbtn-growth">
+        <h2>3. Long-Term Asset Growth (1926 - 2025)</h2>
+        <p class="module-intro">Growth of $100 compounded from real annual returns for the S&amp;P 500, housing, bonds, gold, and cash purchasing power. Vertical axis is logarithmic. Click a legend item to toggle it.</p>
+        <div class="chart-container"><canvas id="goldChart" role="img" aria-label="Line chart of growth of $100 from 1926 to 2025 across five asset classes"></canvas></div>
+        <div class="chart-legend" id="growth-legend"></div>
+        <div class="source-note">
+            <strong>Source & methodology:</strong> 1926–2025 annual returns dataset (inflation, S&amp;P 500, housing, bonds, gold). Values are compounded client-side from the supplied annual return rates — no prices are invented.
+            <strong>Missing data:</strong> 1960 has no observation in the source dataset and is left as a gap, not interpolated. Housing and bond observations end in 2020; no values are invented after that.
+        </div>
+    </section>
+
+    <!-- MODULE 4: SPY -->
+    <section id="tab-spy" class="tab-panel" role="tabpanel" aria-labelledby="tabbtn-spy">
+        <h2>4. SPY Price and Macro Events (September 2016 - September 2026)</h2>
+        <p class="module-intro">Actual month-end SPY closing prices from the supplied daily Nasdaq history, with macro events annotated on top of the observed series.</p>
+        <div class="chart-container"><canvas id="spyChart" role="img" aria-label="Line chart of SPY month-end closing price from September 2016 to September 2026 with macro event markers"></canvas></div>
+        <div class="source-note" id="spy-source-note"></div>
+    </section>
+
+    <!-- MODULE 5: GAMBLER -->
+    <section id="tab-gambler" class="tab-panel" role="tabpanel" aria-labelledby="tabbtn-gambler">
+        <h2>5. Why Gamblers Lose (Statistical Simulation)</h2>
+        <p class="module-intro">You start with <strong>$1,000,000</strong> playing a 50/50 game (Big or Small). Every wager costs a <strong>1% expense ratio</strong>, and you must stake <strong>10%</strong> of your remaining wealth each round. Randomness here is intentional — it's the lesson.</p>
+
+        <div class="stats">
+            <span>Trial: <span id="gamble-count">0</span></span>
+            <span id="gambler-wealth">Your Wealth: $1,000,000</span>
+            <span id="gambler-costs">Total costs paid: $0</span>
+        </div>
+
+        <div id="gambler-active">
+            <div class="gambler-controls">
+                <button id="btn-big" type="button">Bet BIG</button>
+                <button id="btn-small" type="button">Bet SMALL</button>
+                <button id="btn-big-10" type="button">Bet BIG (10x at once)</button>
+                <button id="btn-small-10" type="button">Bet SMALL (10x at once)</button>
+            </div>
+        </div>
+
+        <div id="gambler-ruined" class="ruined-msg" aria-live="polite">
+            <span id="gambler-ruined-text"></span><br><br>
+            <button class="btn-action" type="button" id="gambler-reset-btn">Reset Simulation</button>
+        </div>
+        <div id="gambler-check"></div>
+
+        <div class="chart-container"><canvas id="gamblerChart" role="img" aria-label="Line chart of simulated wealth over successive gambles"></canvas></div>
+    </section>
+
+    <!-- MODULE 6: POKER -->
+    <section id="tab-poker" class="tab-panel" role="tabpanel" aria-labelledby="tabbtn-poker">
+        <h2>6. Expected Value (Poker) <span class="difficulty-badge" id="poker-difficulty"></span></h2>
+        <p class="module-intro">Quant firms love poker: decision-making under uncertainty using incomplete information and probability. <span class="streak-pill" id="poker-streak" style="color:var(--color-text-muted);background:var(--color-surface-muted);"></span></p>
+        <div id="poker-area">
+            <h3 id="poker-q-num"></h3>
+            <div class="scenario-box" id="poker-scenario-box">
+                <div class="poker-scenario-visual" id="poker-visual"></div>
+                <div id="poker-scenario"></div>
+            </div>
+            <div class="options" id="poker-options"></div>
+            <div class="feedback" id="poker-feedback" aria-live="polite">
+                <h3 id="poker-result"></h3>
+                <p id="poker-explanation"></p>
+                <button class="btn-action" type="button" id="poker-next-btn">Next Scenario</button>
+            </div>
+        </div>
+        <div id="poker-end" style="display:none; text-align:center;">
+            <h2>Poker Module Complete!</h2>
+            <div id="poker-final-stats"></div>
+            <button class="btn-action" type="button" id="poker-reset-btn">Shuffle Up and Deal Again</button>
+        </div>
+    </section>
+
+</main>
+
+<footer class="site-footer">
+    V2 of the Learn Finance Through Games platform. Data sources and methodology: <a href="README.md">V2 README</a>.
+    Data: <a href="data/investment_returns.csv">investment returns</a> and <a href="data/spy_historical.csv">SPY history</a>.
+    Compare against <a href="../index.html">V1</a>. Educational use only, not investment advice.
+</footer>
+
+<div id="toast-region" class="toast-region" aria-live="polite"></div>
+
+<script src="js/market-data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/modules/trading.js"></script>
+<script src="js/modules/bias.js"></script>
+<script src="js/modules/growth.js"></script>
+<script src="js/modules/spy.js"></script>
+<script src="js/modules/gambler.js"></script>
+<script src="js/modules/poker.js"></script>
+<script>App.init();</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+# Learn Finance Through Games — V2
+
+A modernized, standalone version of the platform. V1 (`../index.html` at the repo root) is untouched and still runnable independently for side-by-side comparison.
+
+## Run it
+
+No build step, no server required — open the file directly:
+
+```
+v2/index.html
+```
+
+(Double-click it, or `xdg-open v2/index.html` / drag it into a browser.) It loads Chart.js from a CDN and Inter from Google Fonts; both degrade to system fonts / no chart styling gracefully if offline, but the app works fully offline otherwise — all game logic and data are local files.
+
+## Structure
+
+```
+v2/
+  index.html          markup + ARIA tablist shell
+  css/styles.css       design tokens (colors, spacing, radii, shadows) + components
+  js/app.js             tab navigation, localStorage progression system, shared helpers
+  js/market-data.js     copy of the root data bundle (not regenerated — same source values)
+  js/modules/*.js       one file per learning module
+  data/*.csv             copies of the source datasets, for reference/download from the footer
+```
+
+## Data integrity
+
+All historical data comes from the same two source datasets used at the repo root — copied here, not regenerated or altered:
+- `data/investment_returns.csv` — 1926–2025 annual returns (S&P 500, housing, bonds, gold, inflation). 1960 is genuinely missing from the source and is left as a gap. Housing/bond data ends in 2020.
+- `data/spy_historical.csv` — daily SPY closing prices, September 2016 – September 9, 2026. The chart samples this to month-end closes; this is stated on the chart itself, along with the fact these are raw closing prices (not adjusted-close, not total return).
+
+Randomness (`Math.random()`) is used in exactly one place: the Gambler's Ruin module, where it's the intentional subject of the lesson. Nowhere else does the app generate or simulate market data.
+
+## Progression system
+
+Stored in `localStorage` under the key `lfg_v2_progress`:
+
+```json
+{
+  "version": 1,
+  "modules": {
+    "<trading|bias|growth|spy|gambler|poker>": {
+      "bestScore": 0,
+      "attempts": 0,
+      "lastScore": 0,
+      "updatedAt": "ISO date string"
+    }
+  }
+}
+```
+
+No personal or identifying data is stored. A level (Retail Investor → Junior Analyst → Analyst → Portfolio Manager → Chief Investment Officer) is computed from how many modules have a recorded attempt and the average of each module's best score — never from risk-taking or portfolio size alone. "Reset progress" in the header clears this key. If the stored value is missing or unparseable, the app silently falls back to a fresh default state rather than erroring.
+
+## Module scoring, briefly
+
+- **Trading:** score = capital-preservation (how far the portfolio dipped below its starting value at its worst point), reported separately from a "risk posture" label and the realized outcome — explicitly framed as hindsight, not something knowable at decision time.
+- **Bias / Poker:** score = % correct.
+- **Growth / SPY:** passive/informational; credited on first render.
+- **Gambler's Ruin:** credited after a short comprehension check on *why* a fair-odds game still loses money (the expense-ratio drag), taken after ruin or 30 trials.
+
+## Known limitations
+
+- No automated test suite; QA was static analysis plus a scripted jsdom walkthrough of every tab and interaction (see handoff notes in the PR/commit description) — not a pixel-level visual check in a real browser.
+- `localStorage` can be unavailable for `file://` documents in some browser/security configurations (opaque-origin restrictions). The app already handles this — progress just won't persist across reloads in that case, with a console warning rather than a crash.
+- Poker images from V1 (`placehold.co`) were replaced with a local CSS panel rather than kept as external placeholder images.
+- No dark-mode toggle — out of scope for this pass.
