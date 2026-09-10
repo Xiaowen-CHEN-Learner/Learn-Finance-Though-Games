@@ -11,8 +11,8 @@
             --primary: #0a192f;
             --secondary: #00b4d8;
             --accent: #0077b6;
-            --success: #2e7d32;
-            --danger: #d32f2f;
+            --success: #4caf50; 
+            --danger: #f44336;  
             --background: #f4f7f9;
             --box-bg: #ffffff;
             --text: #333;
@@ -48,7 +48,7 @@
             color: #ccd6f6;
             padding: 15px 20px;
             cursor: pointer;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             transition: all 0.3s;
         }
@@ -86,16 +86,32 @@
         .scenario-box { background: #eef2f5; padding: 20px; border-left: 5px solid var(--secondary); margin-bottom: 20px; font-size: 16px; border-radius: 4px; }
         .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; background: #fff; padding: 10px; border-radius: 4px; border: 1px dashed #ccc;}
         .metrics-grid div { font-size: 14px; }
-        .stats { font-weight: bold; font-size: 20px; margin-bottom: 20px; display: flex; justify-content: space-between; padding: 15px; background: var(--primary); color: white; border-radius: 8px;}
+        .stats { font-weight: bold; font-size: 20px; margin-bottom: 20px; display: flex; justify-content: space-between; padding: 15px; background: var(--primary); color: white; border-radius: 8px; transition: color 0.3s;}
+        #portfolio-value { transition: color 0.3s ease; }
         .options button { display: block; width: 100%; padding: 15px; margin: 10px 0; font-size: 16px; cursor: pointer; border: 2px solid #e0e0e0; border-radius: 8px; background: white; text-align: left; transition: all 0.2s; font-weight: 500;}
         .options button:hover { background: #f8f9fa; border-color: var(--secondary); transform: translateX(5px); }
-        .feedback { display: none; background: #e8f5e9; padding: 20px; border-left: 5px solid var(--success); margin-top: 20px; border-radius: 4px; }
-        .feedback h3 { margin-top: 0; color: var(--success); }
+        .feedback { display: none; background: #e8f5e9; padding: 20px; border-left: 5px solid #2e7d32; margin-top: 20px; border-radius: 4px; }
+        .feedback h3 { margin-top: 0; color: #2e7d32; }
         .btn-action { background: var(--secondary); color:white; border:none; padding:12px 25px; font-size: 16px; border-radius:6px; cursor:pointer; margin-top:15px; font-weight: bold; transition: background 0.3s;}
         .btn-action:hover { background: var(--accent); }
+        .btn-prev { background: #607d8b; margin-right: 10px; }
+        .btn-prev:hover { background: #455a64; }
         
         /* Chart Styles */
         .chart-container { position: relative; height: 500px; width: 100%; margin-top: 20px;}
+        .gambler-controls { display: flex; gap: 10px; margin: 15px 0; }
+        .gambler-controls button { flex: 1; padding: 15px; font-size: 18px; font-weight: bold; cursor: pointer; border-radius: 8px; border: none; color: white;}
+        #btn-big { background-color: #2196F3; }
+        #btn-small { background-color: #FF9800; }
+        #btn-big:hover { background-color: #1976D2; }
+        #btn-small:hover { background-color: #F57C00; }
+        .ruined-msg { color: var(--danger); font-weight: bold; font-size: 20px; display: none; text-align: center; margin-top: 20px;}
+        
+        /* Poker Image */
+        .poker-img { width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; }
+        
+        /* Bias Summary List */
+        .summary-list { text-align: left; background: #fff3e0; padding: 20px 40px; border-radius: 8px; margin-top: 20px; display: inline-block; font-size: 16px; }
     </style>
 </head>
 <body>
@@ -111,7 +127,8 @@
     <button class="tab-btn" onclick="openTab('tab-bias')">2. Cognitive Bias</button>
     <button class="tab-btn" onclick="openTab('tab-gold')">3. Gold vs Inflation</button>
     <button class="tab-btn" onclick="openTab('tab-spy')">4. SPY Macros</button>
-    <button class="tab-btn" onclick="openTab('tab-poker')">5. Expected Value (Poker)</button>
+    <button class="tab-btn" onclick="openTab('tab-gambler')">5. Why gamblers lose</button>
+    <button class="tab-btn" onclick="openTab('tab-poker')">6. Expected Value (Poker)</button>
 </nav>
 
 <div class="container">
@@ -133,9 +150,9 @@
                 <h3>Behavioral Finance</h3>
                 <p>Can you spot the cognitive biases? Test your logical reasoning against common retail traps.</p>
             </div>
-            <div class="feature-card" onclick="openTab('tab-gold')">
-                <h3>Macro History</h3>
-                <p>Visualize the 100-year relationship between Fiat Inflation, the Gold Standard, and asset prices.</p>
+            <div class="feature-card" onclick="openTab('tab-gambler')">
+                <h3>Gambler's Ruin</h3>
+                <p>Experience statistical variance and the inescapable math behind the casino's edge.</p>
             </div>
             <div class="feature-card" onclick="openTab('tab-poker')">
                 <h3>Statistical EV</h3>
@@ -146,7 +163,7 @@
 
     <!-- FUNCTION 1: 10-ROUND INVESTING GAME -->
     <div id="tab-game" class="tab-content">
-        <h2>10-Round Event-Driven Trading Game</h2>
+        <h2>1. 10-Round Event-Driven Trading Game</h2>
         <div class="stats">
             <span id="round-counter">Round 1 of 10</span>
             <span id="portfolio-value">Portfolio Value: $10,000</span>
@@ -166,7 +183,8 @@
         </div>
         <div id="game-end" style="display:none; text-align:center;">
             <h2>Simulation Complete!</h2>
-            <h3 id="final-score" style="font-size: 32px; color: var(--accent);"></h3>
+            <h3 id="final-score" style="font-size: 32px; margin-bottom: 5px;"></h3>
+            <div id="final-percentage" style="font-size: 24px; font-weight: bold; margin-bottom: 20px;"></div>
             <p>Compare your performance to a simple "Buy and Hold" strategy which would typically yield standard market returns. Did your active management generate Alpha?</p>
             <button class="btn-action" onclick="resetGame()">Play Again</button>
         </div>
@@ -174,28 +192,34 @@
 
     <!-- FUNCTION 2: BIAS TESTING -->
     <div id="tab-bias" class="tab-content">
-        <h2>Behavioral Finance: Bias Identification</h2>
-        <p>Analyze the following scenarios. Decide if the investor is acting rationally or if they are falling victim to a cognitive bias. Identify the specific bias if applicable.</p>
+        <h2>2. Behavioral Finance: Bias Identification</h2>
+        <p>Analyze the following scenarios. Decide if the investor is acting rationally or if they are falling victim to a cognitive bias.</p>
         <div id="bias-area">
             <h3 id="bias-q-num"></h3>
             <div class="scenario-box" id="bias-scenario"></div>
             <div class="options" id="bias-options"></div>
+            <div style="margin-top: 15px;">
+                <button class="btn-action btn-prev" onclick="prevBias()">Previous Question</button>
+            </div>
             <div class="feedback" id="bias-feedback">
                 <h3 id="bias-result"></h3>
                 <p id="bias-explanation"></p>
+                <button class="btn-action btn-prev" onclick="prevBias()">Previous Question</button>
                 <button class="btn-action" onclick="nextBias()">Next Question</button>
             </div>
         </div>
         <div id="bias-end" style="display:none; text-align:center;">
             <h2>Bias Assessment Complete!</h2>
+            <div id="bias-summary-area"></div>
+            <br>
             <button class="btn-action" onclick="resetBias()">Retake Assessment</button>
         </div>
     </div>
 
     <!-- FUNCTION 3: GOLD & INFLATION -->
     <div id="tab-gold" class="tab-content">
-        <h2>Gold vs Inflation (1926 - 2026)</h2>
-        <p>Interactive Dual-Axis Chart. <strong>Hover over the large data points to read the historical commentary</strong>. (Events are embedded in the tooltips to prevent visual clutter).</p>
+        <h2>3. Gold vs Inflation (1926 - 2026)</h2>
+        <p>Interactive Dual-Axis Chart. <strong>Hover over the data points</strong> to read the historical relationship between the abandonment of the gold standard and US CPI YoY increases.</p>
         <div class="chart-container">
             <canvas id="goldChart"></canvas>
         </div>
@@ -203,20 +227,50 @@
 
     <!-- FUNCTION 4: SPY EVENTS -->
     <div id="tab-spy" class="tab-content">
-        <h2>SPY Price Detailed Movement & Macro Events (2006 - 2026)</h2>
-        <p>Interactive Chart: Shows year-by-year SPY trajectory. <strong>Hover over the highlighted nodes</strong> to read the major market-moving catalysts.</p>
+        <h2>4. SPY Price Detailed Movement & Macro Events (2006 - 2026)</h2>
+        <p>Interactive Chart: <strong>Green nodes = Positive Macros, Red nodes = Negative Macros, Black = Neutral.</strong> Hover over the nodes to read the events.</p>
         <div class="chart-container">
             <canvas id="spyChart"></canvas>
         </div>
     </div>
 
-    <!-- FUNCTION 5: POKER DECISIONS -->
+    <!-- FUNCTION 5: WHY GAMBLERS LOSE -->
+    <div id="tab-gambler" class="tab-content">
+        <h2>5. Why Gamblers Lose (Statistical Simulation)</h2>
+        <p>You start with <strong>$1,000,000</strong>. You are playing a 50/50 game (Big or Small). The catch? Every gamble costs a <strong>1% expense ratio on your wager</strong>. You must wager 10% of your total remaining wealth each round.</p>
+        
+        <div class="stats">
+            <span>Trial: <span id="gamble-count">0</span></span>
+            <span id="gambler-wealth">Your Wealth: $1,000,000</span>
+        </div>
+        
+        <div id="gambler-active">
+            <div class="gambler-controls">
+                <button id="btn-big" onclick="playGamble('big')">Bet BIG</button>
+                <button id="btn-small" onclick="playGamble('small')">Bet SMALL</button>
+            </div>
+        </div>
+        
+        <div id="gambler-ruined" class="ruined-msg">
+            <span id="gambler-ruined-text">You already lost 90% of your money! See from the casino side.</span><br><br>
+            <button class="btn-action" onclick="showCasinoChart()">Act as Casino (See Their Profits)</button>
+        </div>
+
+        <div class="chart-container" id="gambler-chart-wrapper">
+            <canvas id="gamblerChart"></canvas>
+        </div>
+    </div>
+
+    <!-- FUNCTION 6: POKER DECISIONS -->
     <div id="tab-poker" class="tab-content">
-        <h2>Expected Value & Win Rate Estimation</h2>
+        <h2>6. Expected Value (Poker)</h2>
         <p>Quant firms love poker because it forces decision-making under uncertainty using incomplete information and statistical probability.</p>
         <div id="poker-area">
             <h3 id="poker-q-num"></h3>
-            <div class="scenario-box" id="poker-scenario"></div>
+            <div class="scenario-box" id="poker-scenario-box">
+                <img id="poker-img" class="poker-img" src="" alt="Poker Scenario Illustration">
+                <div id="poker-scenario"></div>
+            </div>
             <div class="options" id="poker-options"></div>
             <div class="feedback" id="poker-feedback">
                 <h3 id="poker-result"></h3>
@@ -239,7 +293,6 @@
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
         
-        // Find the matching button and set active
         const btns = document.querySelectorAll('.tab-btn');
         for(let btn of btns) {
             if(btn.getAttribute('onclick').includes(tabId)) {
@@ -249,94 +302,52 @@
         
         if(tabId === 'tab-gold' && !goldChartInstance) renderGoldChart();
         if(tabId === 'tab-spy' && !spyChartInstance) renderSpyChart();
+        if(tabId === 'tab-gambler' && !gamblerChartInstance) initGamblerChart();
     }
 
     // --- FUNCTION 1: INVESTING GAME LOGIC ---
     let portfolio = 10000;
+    let oldPortfolio = 10000;
     let currentRound = 0;
     const gameData = [
-        { 
-            date: "April 20, 2020", title: "The Negative Oil Contract", 
-            text: "WTI Crude Oil May contract just settled at -$37.63/barrel. Exxon Mobil (XOM) has dropped significantly. Do you buy?", 
-            metrics: ["XOM Price: $41.18", "XOM Div Yield: ~8.5%", "S&P VIX: 43.83", "US 10-Yr Yield: 0.61%"],
-            options: [{text: "Buy heavily (Oversold anomaly)", mult: 1.5}, {text: "Buy slightly", mult: 1.1}, {text: "Avoid entirely (Fundamental destruction)", mult: 1.0}], 
-            result: "The negative contract was a futures storage anomaly. Oil prices rapidly recovered, and XOM maintained its dividend, going on a massive multi-year bull run. Buying heavily was the right fundamental and contrarian play." 
-        },
-        { 
-            date: "Sept 15, 2008", title: "Lehman Brothers Bankruptcy", 
-            text: "Lehman Brothers officially files for Chapter 11 bankruptcy. Interbank lending has frozen. The S&P 500 is plunging.", 
-            metrics: ["SPX Price: ~1,192", "VIX: 31.70 (Rising fast)", "Fed Funds Rate: 2.00%", "TED Spread: Spiking to 300+ bps"],
-            options: [{text: "Buy the dip immediately (Value play)", mult: 0.60}, {text: "Hold current positions", mult: 0.70}, {text: "Sell to Cash / Defensive rotation", mult: 0.95}], 
-            result: "The systemic risk was real. The market continued to drop another 40% before bottoming in March 2009. Catching the 'falling knife' immediately after Lehman destroyed capital." 
-        },
-        { 
-            date: "March 9, 2009", title: "The Generational Bottom?", 
-            text: "The market is down over 50% from highs. Economic data is historically terrible, but the Fed has announced massive Quantitative Easing (QE1).", 
-            metrics: ["SPX Price: 676", "Unemployment: 8.5%", "Shiller P/E: 13.3 (Historically low)", "VIX: 49.68"],
-            options: [{text: "Stay in Cash (Too risky)", mult: 1.0}, {text: "Invest 50% (Dollar Cost Average)", mult: 1.3}, {text: "Go All In Equities", mult: 1.6}], 
-            result: "This day marked the exact bottom of the Great Financial Crisis. Valuations were historically cheap and Fed liquidity provided a backstop. Aggressive buying yielded massive returns." 
-        },
-        { 
-            date: "May 18, 2012", title: "Facebook Botched IPO", 
-            text: "Facebook (META) IPOs at $38 but Nasdaq technical glitches plague the opening. The stock drops into the $20s over the next few weeks amidst doubts about mobile monetization.", 
-            metrics: ["FB Price: $28.00", "Forward P/E: 40x+", "Mobile Ad Rev: ~0%", "User Base: 900M+ active"],
-            options: [{text: "Short the stock (Overvalued hype)", mult: 0.5}, {text: "Avoid entirely", mult: 1.0}, {text: "Buy the dip (Long-term growth)", mult: 2.0}], 
-            result: "Despite the botched IPO and early mobile monetization fears, Facebook quickly solved its mobile ad model. The stock became one of the greatest tech performers of the decade." 
-        },
-        { 
-            date: "Jan 27, 2021", title: "The Meme Stock Short Squeeze", 
-            text: "GameStop (GME) goes from $4 to over $300 in weeks driven by Reddit retail traders forcing a short squeeze on hedge funds. Fundamentals are completely detached.", 
-            metrics: ["GME Price: $347.51", "Short Interest: 140% (Pre-squeeze)", "P/E: N/A (Losing money)", "RSI: > 90 (Extreme overbought)"],
-            options: [{text: "FOMO Buy at the top", mult: 0.3}, {text: "Short it heavily", mult: 0.4}, {text: "Stay away (Cash out)", mult: 1.0}], 
-            result: "Buying the top wiped out retail investors. Shorting it was equally dangerous due to unlimited risk and margin calls (many funds blew up). Staying away was the smartest risk-adjusted decision." 
-        },
-        { 
-            date: "Nov 2021", title: "Inflation 'Transitory' Narrative Cracks", 
-            text: "US CPI Inflation hits 6.8%. The Fed has maintained it is 'transitory', but high-duration assets (unprofitable tech) look extremely vulnerable to rate hikes.", 
-            metrics: ["CPI: 6.8%", "Fed Funds Rate: 0.00 - 0.25%", "Nasdaq P/E: >35x", "10-Yr Yield: 1.5%"],
-            options: [{text: "Buy more Tech stocks", mult: 0.5}, {text: "Hold standard 60/40 portfolio", mult: 0.8}, {text: "Rotate to Value, Energy, & Cash", mult: 1.2}], 
-            result: "2022 saw aggressive rate hikes. Unprofitable tech dropped 50-80%, and bonds had their worst year in history. Energy was the only positive sector. Rotating protected capital." 
-        },
-        { 
-            date: "Nov 30, 2022", title: "The AI Paradigm Shift", 
-            text: "OpenAI releases ChatGPT. Big tech companies instantly pivot to AI infrastructure. Semiconductor demand projections spike.", 
-            metrics: ["NVDA Price: ~$160", "NVDA Forward P/E: ~40x", "Interest Rates: Rising", "Market Sentiment: Bearish"],
-            options: [{text: "Short Tech (Recession fears)", mult: 0.6}, {text: "Wait and see", mult: 1.0}, {text: "Invest heavily in AI infra (NVDA, MSFT)", mult: 1.8}], 
-            result: "The AI boom created an unprecedented capex cycle for data centers. NVDA went on to grow earnings exponentially, stock returned over 400% in the following 18 months." 
-        },
-        { 
-            date: "March 1999", title: "Dot-Com Euphoria", 
-            text: "Any company adding '.com' to its name sees its stock triple on opening day. Retail day-trading is rampant.", 
-            metrics: ["Nasdaq P/E: >100x", "Pets.com: Zero revenue, huge valuation", "Fed Rate: 4.75%", "Retail participation: All-time high"],
-            options: [{text: "Go all in on .com stocks", mult: 0.2}, {text: "Hold stable Value/Dividend stocks", mult: 1.1}, {text: "Short the Nasdaq", mult: 0.8}], 
-            result: "The bubble burst in 2000. Nasdaq fell nearly 80%. Shorting was tough because the market stayed irrational longer than you could stay solvent, but holding value stocks preserved capital." 
-        },
-        { 
-            date: "August 5, 2011", title: "US Credit Downgrade", 
-            text: "S&P historically downgrades US Sovereign Debt from AAA to AA+. The market panics, dropping 6% in a single day.", 
-            metrics: ["SPX Price: 1,199", "VIX: 48.00", "Gold Price: Spiking above $1600", "US 10-Yr Yield: Dropping to 2.5%"],
-            options: [{text: "Panic Sell US Equities", mult: 0.9}, {text: "Do nothing", mult: 1.1}, {text: "Buy the fear (Equities & Treasuries)", mult: 1.2}], 
-            result: "Paradoxically, money flooded into US Treasuries as a safe haven despite the downgrade. The stock market volatility subsided and resumed a multi-year bull run." 
-        },
-        { 
-            date: "Early 2024", title: "The Rate Cut Anticipation", 
-            text: "Inflation has cooled to ~3%. The Fed dots plot indicates rate cuts are coming. The market is hitting all-time highs.", 
-            metrics: ["SPX Price: ~5,100", "CPI: 3.1%", "Unemployment: 3.9%", "US 10-Yr Yield: ~4.2%"],
-            options: [{text: "Sell everything (Market is 'too high')", mult: 0.9}, {text: "Stay invested in equities", mult: 1.1}], 
-            result: "Markets historically perform strongly in the 'pause' phase before rate cuts, as long as employment holds up. Cashing out on all-time highs caused you to miss significant gains." 
-        }
+        { date: "April 20, 2020", title: "The Negative Oil Contract", text: "WTI Crude Oil May contract just settled at -$37.63/barrel. Exxon Mobil (XOM) has dropped significantly. Do you buy?", metrics: ["XOM Price: $41.18", "XOM Div Yield: ~8.5%", "S&P VIX: 43.83", "US 10-Yr Yield: 0.61%"], options: [{text: "Buy heavily (Oversold anomaly)", mult: 1.5}, {text: "Buy slightly", mult: 1.1}, {text: "Avoid entirely (Fundamental destruction)", mult: 1.0}], result: "The negative contract was a futures storage anomaly. Oil prices rapidly recovered. Buying heavily was the right fundamental and contrarian play." },
+        { date: "Sept 15, 2008", title: "Lehman Brothers Bankruptcy", text: "Lehman Brothers officially files for Chapter 11 bankruptcy. Interbank lending has frozen. The S&P 500 is plunging.", metrics: ["SPX Price: ~1,192", "VIX: 31.70 (Rising fast)", "Fed Funds Rate: 2.00%", "TED Spread: Spiking to 300+ bps"], options: [{text: "Buy the dip immediately (Value play)", mult: 0.60}, {text: "Hold current positions", mult: 0.70}, {text: "Sell to Cash / Defensive rotation", mult: 0.95}], result: "The systemic risk was real. Catching the 'falling knife' immediately after Lehman destroyed capital. The market bottomed much later." },
+        { date: "March 9, 2009", title: "The Generational Bottom?", text: "The market is down over 50% from highs. Economic data is historically terrible, but the Fed has announced massive Quantitative Easing (QE1).", metrics: ["SPX Price: 676", "Unemployment: 8.5%", "Shiller P/E: 13.3", "VIX: 49.68"], options: [{text: "Stay in Cash (Too risky)", mult: 1.0}, {text: "Invest 50% (Dollar Cost Average)", mult: 1.3}, {text: "Go All In Equities", mult: 1.6}], result: "This day marked the exact bottom of the Great Financial Crisis. Valuations were historically cheap and Fed liquidity provided a backstop." },
+        { date: "May 18, 2012", title: "Facebook Botched IPO", text: "Facebook (META) IPOs at $38 but technical glitches plague the opening. The stock drops into the $20s over mobile monetization doubts.", metrics: ["FB Price: $28.00", "Forward P/E: 40x+", "Mobile Ad Rev: ~0%", "User Base: 900M+"], options: [{text: "Short the stock", mult: 0.5}, {text: "Avoid entirely", mult: 1.0}, {text: "Buy the dip", mult: 2.0}], result: "Facebook quickly solved its mobile ad model. The stock became one of the greatest tech performers of the decade." },
+        { date: "Jan 27, 2021", title: "The Meme Stock Short Squeeze", text: "GameStop (GME) goes from $4 to over $300 driven by retail traders forcing a short squeeze. Fundamentals are detached.", metrics: ["GME Price: $347.51", "Short Interest: 140%", "P/E: N/A (Losing money)"], options: [{text: "FOMO Buy at the top", mult: 0.3}, {text: "Short it heavily", mult: 0.4}, {text: "Stay away (Cash out)", mult: 1.0}], result: "Buying the top wiped out retail. Shorting was equally dangerous due to unlimited risk. Staying away preserved capital." },
+        { date: "Nov 2021", title: "Inflation 'Transitory' Narrative Cracks", text: "US CPI hits 6.8%. High-duration assets (unprofitable tech) look extremely vulnerable to rate hikes.", metrics: ["CPI: 6.8%", "Fed Funds Rate: 0.00 - 0.25%", "Nasdaq P/E: >35x"], options: [{text: "Buy more Tech stocks", mult: 0.5}, {text: "Hold standard 60/40", mult: 0.8}, {text: "Rotate to Value & Cash", mult: 1.2}], result: "2022 saw aggressive rate hikes. Unprofitable tech dropped 50-80%. Rotating to Value protected capital." },
+        { date: "Nov 30, 2022", title: "The AI Paradigm Shift", text: "OpenAI releases ChatGPT. Big tech companies instantly pivot to AI infrastructure. Semiconductor demand spikes.", metrics: ["NVDA Price: ~$160", "Interest Rates: Rising", "Market Sentiment: Bearish"], options: [{text: "Short Tech", mult: 0.6}, {text: "Wait and see", mult: 1.0}, {text: "Invest heavily in AI infra", mult: 1.8}], result: "The AI boom created an unprecedented capex cycle. NVDA went on to grow earnings exponentially." },
+        { date: "March 1999", title: "Dot-Com Euphoria", text: "Any company adding '.com' to its name sees its stock triple on opening day.", metrics: ["Nasdaq P/E: >100x", "Retail participation: All-time high"], options: [{text: "Go all in on .com", mult: 0.2}, {text: "Hold stable Value stocks", mult: 1.1}, {text: "Short the Nasdaq", mult: 0.8}], result: "The bubble burst in 2000. Shorting was tough because irrationality lasted, but holding value stocks preserved capital." },
+        { date: "August 5, 2011", title: "US Credit Downgrade", text: "S&P historically downgrades US Sovereign Debt from AAA to AA+. The market panics.", metrics: ["SPX Price: 1,199", "VIX: 48.00", "US 10-Yr Yield: Dropping"], options: [{text: "Panic Sell US Equities", mult: 0.9}, {text: "Do nothing", mult: 1.1}, {text: "Buy the fear", mult: 1.2}], result: "Paradoxically, money flooded into US Treasuries as a safe haven. The stock market volatility subsided." },
+        { date: "Early 2024", title: "The Rate Cut Anticipation", text: "Inflation has cooled. The Fed dots plot indicates rate cuts are coming. The market is hitting all-time highs.", metrics: ["SPX Price: ~5,100", "CPI: 3.1%", "Unemployment: 3.9%"], options: [{text: "Sell everything", mult: 0.9}, {text: "Stay invested in equities", mult: 1.1}], result: "Markets historically perform strongly in the 'pause' phase before rate cuts. Staying invested captured significant gains." }
     ];
 
     function loadGameRound() {
-        if(currentRound >= 10) {
+        if(currentRound >= gameData.length) {
             document.getElementById('game-area').style.display = 'none';
             document.getElementById('game-end').style.display = 'block';
+            
+            // Calculate % Win or % Loss
+            let percentChange = ((portfolio - 10000) / 10000) * 100;
+            let percentEl = document.getElementById('final-percentage');
             document.getElementById('final-score').innerText = `Final Portfolio Value: $${Math.round(portfolio).toLocaleString()}`;
+            
+            if(percentChange >= 0) {
+                percentEl.innerText = `(+${percentChange.toFixed(2)}% Win)`;
+                percentEl.style.color = "var(--success)";
+            } else {
+                percentEl.innerText = `(${percentChange.toFixed(2)}% Loss)`;
+                percentEl.style.color = "var(--danger)";
+            }
             return;
         }
         let data = gameData[currentRound];
         document.getElementById('round-counter').innerText = `Round ${currentRound + 1} of 10`;
-        document.getElementById('portfolio-value').innerText = `Portfolio: $${Math.round(portfolio).toLocaleString()}`;
+        
+        let pText = document.getElementById('portfolio-value');
+        pText.innerText = `Portfolio: $${Math.round(portfolio).toLocaleString()}`;
+        pText.style.color = "white";
+
         document.getElementById('game-date').innerText = `${data.date} — ${data.title}`;
         document.getElementById('game-scenario').innerText = data.text;
         
@@ -356,56 +367,63 @@
     function makeGameDecision(optIndex) {
         let data = gameData[currentRound];
         let chosen = data.options[optIndex];
+        oldPortfolio = portfolio;
         portfolio = portfolio * chosen.mult;
+        
+        let pText = document.getElementById('portfolio-value');
+        pText.innerText = `Portfolio: $${Math.round(portfolio).toLocaleString()}`;
+        
+        if (portfolio > oldPortfolio) { pText.style.color = "var(--success)"; } 
+        else if (portfolio < oldPortfolio) { pText.style.color = "var(--danger)"; } 
+        else { pText.style.color = "white"; }
         
         document.getElementById('game-options').style.display = 'none';
         document.getElementById('game-feedback').style.display = 'block';
         document.getElementById('feedback-text').innerText = data.result;
-        document.getElementById('portfolio-value').innerText = `Portfolio: $${Math.round(portfolio).toLocaleString()}`;
     }
 
     function nextRound() { currentRound++; loadGameRound(); }
     function resetGame() { portfolio = 10000; currentRound = 0; document.getElementById('game-end').style.display = 'none'; document.getElementById('game-area').style.display = 'block'; loadGameRound(); }
     loadGameRound();
 
-
     // --- FUNCTION 2: BIAS TESTING LOGIC ---
     let currentBias = 0;
+    let userBiasAnswers = {};
     const biasData = [
-        { 
-            q: "Scenario: You bought a tech stock at $100. It is now $40. Earnings have shrunk, the CEO left, and competitors are winning. You refuse to sell until it gets back to $100 because 'you refuse to lock in a loss.' Is this biased?", 
-            opts: ["Not Biased (Rational Hold)", "Biased: Sunk Cost Fallacy / Anchoring", "Biased: Recency Bias"], 
-            correct: 1, 
-            explain: "Sunk Cost Fallacy & Anchoring. You are anchoring your decision to the $100 purchase price (a sunk cost), which is completely irrelevant to the market's current valuation of the company's future cash flows." 
-        },
-        { 
-            q: "Scenario: You believe strongly that an electric vehicle company is going to dominate the world. You only read blogs and watch videos that praise the company. You immediately block any analyst on Twitter who points out their debt issues. Is this biased?", 
-            opts: ["Biased: Confirmation Bias", "Biased: Hindsight Bias", "Not Biased (Conviction Investing)"], 
-            correct: 0, 
-            explain: "Confirmation Bias. This is the tendency to actively seek out, interpret, and favor information that confirms your preexisting beliefs while ignoring contrary data." 
-        },
-        { 
-            q: "Scenario: After the 2020 COVID crash and subsequent massive recovery, you look back at a chart and tell your friends, 'It was so obvious the market was going to bounce, the Fed printed trillions!' Even though in March 2020 you were in pure cash, terrified. Is this biased?", 
-            opts: ["Biased: Framing Effect", "Not Biased (Accurate market history)", "Biased: Hindsight Bias"], 
-            correct: 2, 
-            explain: "Hindsight Bias. It is the psychological phenomenon that allows people to convince themselves after an event that they accurately predicted it before it happened ('I knew it all along')." 
-        },
-        {
-            q: "Scenario: You evaluate a company, calculate a discounted cash flow model showing it's undervalued by 30%, review both bullish and bearish thesis points objectively, and decide to allocate 5% of your portfolio to it. Is this biased?",
-            opts: ["Biased: Overconfidence Bias", "Not Biased (Rational Analysis)", "Biased: Availability Heuristic"],
-            correct: 1,
-            explain: "Rational Analysis. You weighed both sides, used quantitative modeling, and applied appropriate risk management (position sizing)."
-        }
+        { q: "You bought a tech stock at $100. It is now $40. Earnings have shrunk, competitors are winning. You refuse to sell until it gets back to $100 because 'you refuse to lock in a loss.'", opts: ["Not Biased", "Biased: Sunk Cost / Anchoring", "Biased: Recency Bias"], correct: 1, explain: "Anchoring to the $100 price (sunk cost)." },
+        { q: "You believe strongly in an EV company. You only read blogs praising it and block anyone pointing out its debt issues.", opts: ["Biased: Confirmation Bias", "Biased: Hindsight Bias", "Not Biased"], correct: 0, explain: "Confirmation Bias: favoring info that confirms preexisting beliefs." },
+        { q: "After the 2020 crash, you say, 'It was so obvious the market would bounce!' even though you were in pure cash and terrified.", opts: ["Biased: Framing Effect", "Not Biased", "Biased: Hindsight Bias"], correct: 2, explain: "Hindsight Bias: 'I knew it all along' effect." },
+        { q: "You objectively evaluate a company using a DCF model, review bear/bull cases, and allocate 5% of your portfolio.", opts: ["Biased: Overconfidence", "Not Biased", "Biased: Availability Heuristic"], correct: 1, explain: "Rational Analysis, proper risk management." },
+        { q: "You sell your winning stocks quickly to 'secure profits' but hold onto your losing stocks hoping they rebound.", opts: ["Biased: Disposition Effect", "Not Biased", "Biased: Endowment Effect"], correct: 0, explain: "Disposition Effect: tendency to sell winners too early and hold losers too long." },
+        { q: "You hear a recent news story about a shark attack, so you cancel your beach trip, even though statistics show the risk is virtually zero.", opts: ["Biased: Availability Heuristic", "Biased: Loss Aversion", "Not Biased"], correct: 0, explain: "Availability Heuristic: relying on immediate examples that come to mind." },
+        { q: "You value a mug you received for free at $10, but you wouldn't pay more than $5 to buy the exact same mug from a store.", opts: ["Biased: Anchoring", "Not Biased", "Biased: Endowment Effect"], correct: 2, explain: "Endowment Effect: placing higher value on things merely because you own them." },
+        { q: "A mutual fund advertises '90% of our years are positive!' instead of 'We have a 10% chance of a losing year'. You invest based on this phrasing.", opts: ["Biased: Framing Effect", "Biased: Hindsight Bias", "Not Biased"], correct: 0, explain: "Framing Effect: reacting differently depending on how information is presented." },
+        { q: "You flip a coin 5 times, and it lands heads every time. You bet heavily on tails for the 6th flip, believing it is 'due'.", opts: ["Biased: Gambler's Fallacy", "Not Biased", "Biased: Confirmation Bias"], correct: 0, explain: "Gambler's Fallacy: believing past independent events affect future probability." },
+        { q: "You believe you are a better driver than 90% of the population.", opts: ["Not Biased", "Biased: Overconfidence / Illusory Superiority", "Biased: Sunk Cost Fallacy"], correct: 1, explain: "Illusory Superiority: overestimating one's own qualities relative to others." }
     ];
 
     function loadBiasRound() {
         if(currentBias >= biasData.length) {
             document.getElementById('bias-area').style.display = 'none';
             document.getElementById('bias-end').style.display = 'block';
+            
+            // Generate Summary of wrong answers
+            let summaryHTML = "<h3>Areas for Improvement:</h3><ul class='summary-list'>";
+            let allCorrect = true;
+            for(let i = 0; i < biasData.length; i++) {
+                if(userBiasAnswers[i] !== biasData[i].correct) {
+                    allCorrect = false;
+                    summaryHTML += `<li><strong>Q${i+1}:</strong> You missed ${biasData[i].explain}</li>`;
+                }
+            }
+            summaryHTML += "</ul>";
+            if(allCorrect) summaryHTML = "<h3>Excellent Job!</h3><p>You identified every bias correctly.</p>";
+            document.getElementById('bias-summary-area').innerHTML = summaryHTML;
             return;
         }
+        
         let data = biasData[currentBias];
-        document.getElementById('bias-q-num').innerText = `Assessment ${currentBias + 1}`;
+        document.getElementById('bias-q-num').innerText = `Assessment ${currentBias + 1} of ${biasData.length}`;
         document.getElementById('bias-scenario').innerText = data.q;
         
         let optsHtml = "";
@@ -415,55 +433,49 @@
         document.getElementById('bias-options').innerHTML = optsHtml;
         document.getElementById('bias-options').style.display = 'block';
         document.getElementById('bias-feedback').style.display = 'none';
+        
+        // Hide previous button if on the first question
+        let prevBtns = document.querySelectorAll('.btn-prev');
+        prevBtns.forEach(btn => btn.style.display = (currentBias === 0) ? 'none' : 'inline-block');
     }
 
     function makeBiasDecision(index) {
         let data = biasData[currentBias];
+        userBiasAnswers[currentBias] = index; // Store Answer
+        
         document.getElementById('bias-options').style.display = 'none';
         document.getElementById('bias-feedback').style.display = 'block';
         
+        let resText = document.getElementById('bias-result');
         if(index === data.correct) {
-            document.getElementById('bias-result').innerText = "Correct Identification!";
-            document.getElementById('bias-result').style.color = "var(--success)";
+            resText.innerText = "Correct Identification!";
+            resText.style.color = "var(--success)";
         } else {
-            document.getElementById('bias-result').innerText = "Incorrect.";
-            document.getElementById('bias-result').style.color = "var(--danger)";
+            resText.innerText = "Incorrect.";
+            resText.style.color = "var(--danger)";
         }
         document.getElementById('bias-explanation').innerHTML = `<strong>Explanation:</strong> ${data.explain}`;
     }
-
+    
     function nextBias() { currentBias++; loadBiasRound(); }
-    function resetBias() { currentBias = 0; document.getElementById('bias-end').style.display = 'none'; document.getElementById('bias-area').style.display = 'block'; loadBiasRound(); }
+    function prevBias() { if(currentBias > 0) { currentBias--; loadBiasRound(); } }
+    function resetBias() { currentBias = 0; userBiasAnswers = {}; document.getElementById('bias-end').style.display = 'none'; document.getElementById('bias-area').style.display = 'block'; loadBiasRound(); }
     loadBiasRound();
 
 
-    // --- FUNCTION 5: POKER DECISIONS ---
+    // --- FUNCTION 6: POKER DECISIONS WITH IMAGES ---
     let currentPoker = 0;
     const pokerData = [
-        { 
-            q: "The pot is $100. Opponent bets $20. You must call $20 to win $120 total. You estimate you have a 25% chance of hitting your winning flush on the river. What is the Expected Value (EV)? Should you call?", 
-            opts: ["Call (+EV)", "Fold (-EV)"], 
-            correct: 0, 
-            explain: "Pot odds: You pay $20 to win $120, giving you 6:1 odds. You only need ~14.2% equity to break even (20 / 140). Since you have 25% equity, calling is highly profitable (+EV) in the long run." 
-        },
-        { 
-            q: "Pre-flop. You hold Ace-King Unsuited (AKo). Your opponent goes all-in and accidentally reveals Pocket Queens (QQ). What is your approximate statistical win rate (Equity) in this exact spot?", 
-            opts: ["~20% (You need an Ace or King)", "~43% (Coin Flip slightly favoring the pair)", "~60% (AK is a premium hand)"], 
-            correct: 1, 
-            explain: "43%. This is the classic 'Coin Flip' or race. The made pair (QQ) is a slight favorite (approx 57%) over two overcards (AKo) pre-flop. You have five community cards to pair your Ace or King." 
-        },
-        { 
-            q: "Pre-flop. You hold Pocket Aces (AA). Opponent holds Pocket Kings (KK). Both of you go all in. What is the approximate win rate for the Aces?", 
-            opts: ["~65%", "~81%", "~95%"], 
-            correct: 1, 
-            explain: "81%. Aces dominate Kings pre-flop. The only way Kings win is by hitting one of the remaining two Kings in the deck (or a freak straight/flush), making AA an 81-82% massive favorite." 
-        },
-        {
-            q: "Flop action: You have an open-ended straight draw (8 outs). The opponent moves all in. You calculate you have exactly a 31% chance to win. The pot odds require you to have 35% equity to breakeven. You fold. The runout happens, and you WOULD have hit your straight. Did you make a bad decision?",
-            opts: ["Yes, I should have trusted my gut.", "No, folding was the correct EV decision."],
-            correct: 1,
-            explain: "No, folding was correct. In finance and poker, separate the decision quality from the outcome. If you require 35% equity and only have 31%, calling is a mathematically losing play over 1,000 iterations, even if you happen to hit the lucky card this one time."
-        }
+        { q: "The pot is $100. Opponent bets $20. You must call $20 to win $120 total. You estimate you have a 25% chance of hitting your winning flush on the river. EV?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Pot:+$100+%7C+Bet:+$20", opts: ["Call (+EV)", "Fold (-EV)"], correct: 0, explain: "Pot odds: Pay $20 to win $120 (14.2% equity needed). 25% equity > 14.2% needed, so calling is highly profitable (+EV)." },
+        { q: "Pre-flop. You hold AKo. Opponent reveals QQ. Equity in this exact spot?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=AK+vs+QQ+(Coin+Flip)", opts: ["~20%", "~43%", "~60%"], correct: 1, explain: "43%. The classic 'Coin Flip'. The made pair (QQ) is a slight favorite (approx 57%) over two overcards pre-flop." },
+        { q: "Pre-flop. You hold AA. Opponent holds KK. Win rate for Aces?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Pocket+Aces+vs+Pocket+Kings", opts: ["~65%", "~81%", "~95%"], correct: 1, explain: "81%. Aces dominate Kings pre-flop. KK only has two outs (the other two Kings)." },
+        { q: "Flop action: Open-ended straight draw. Opponent all-in. You have 31% equity. Pot odds require 35%. You fold. Runout happens, and you WOULD have hit your straight. Bad decision?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=31%25+Equity+vs+35%25+Required", opts: ["Yes, trust gut", "No, mathematically correct"], correct: 1, explain: "No. Separate decision quality from outcome. Long term, calling without proper equity loses money." },
+        { q: "You hold 7-8 suited. Flop comes 5-6-9 of different suits. You have a straight! Opponent goes all-in. How many 'outs' does opponent have to beat you if they hold a set of 5s?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Made+Straight+vs+Flopped+Set", opts: ["None", "7 outs", "10 outs (Full House/Quads)"], correct: 2, explain: "They need the board to pair (or hit the last 5). The board has 3 remaining cards of the 5s, 6s, and 9s, plus the remaining 5s. Roughly 7-10 outs to hit a full house or quads by river." },
+        { q: "Pot is $200. You are first to act on the river. You have a 'busted' draw (0% chance to win at showdown). If you bluff $100, what percentage of the time must the opponent fold for your bluff to break even?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Bluffing:+$100+to+win+$200", opts: ["33%", "50%", "66%"], correct: 0, explain: "Risking $100 to win $200. Breakeven = Risk / (Risk + Reward) = 100 / 300 = 33.3%." },
+        { q: "You have JJ. Flop is A-K-2. Opponent bets aggressively. Does your equity generally go up or down?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Jacks+vs+A-K-2+Board", opts: ["Up", "Down"], correct: 1, explain: "Down. The presence of multiple overcards heavily favors your opponent's range." },
+        { q: "Pot odds are 4:1. You calculate your hand equity is 15%. Should you call?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Pot+Odds:+4:1", opts: ["Yes", "No"], correct: 1, explain: "4:1 odds means you need 1 / (4+1) = 20% equity to breakeven. Since 15% < 20%, it is a -EV fold." },
+        { q: "Expected Value formula: EV = (Probability of Win * Amount Won) - (Probability of Loss * Amount Lost). Pot is $50. Bet is $10. Win probability is 20%. EV?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Calculate+Expected+Value", opts: ["+$2", "-$2", "$0"], correct: 0, explain: "(0.20 * $50) - (0.80 * $10) = $10 - $8 = +$2." },
+        { q: "In game theory, playing a strategy that makes your opponent indifferent to calling or folding is called:", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Game+Theory+Concept", opts: ["GTO (Game Theory Optimal)", "Exploitative Strategy", "Tilt"], correct: 0, explain: "GTO aims to create perfectly balanced ranges so opponents cannot mathematically exploit you." }
     ];
     function loadPokerRound() {
         if(currentPoker >= pokerData.length) {
@@ -472,7 +484,8 @@
             return;
         }
         let data = pokerData[currentPoker];
-        document.getElementById('poker-q-num').innerText = `Scenario ${currentPoker + 1}`;
+        document.getElementById('poker-q-num').innerText = `Scenario ${currentPoker + 1} of ${pokerData.length}`;
+        document.getElementById('poker-img').src = data.img;
         document.getElementById('poker-scenario').innerText = data.q;
         let optsHtml = "";
         data.opts.forEach((opt, index) => {
@@ -486,14 +499,13 @@
         let data = pokerData[currentPoker];
         document.getElementById('poker-options').style.display = 'none';
         document.getElementById('poker-feedback').style.display = 'block';
-        
-        let titleHtml = document.getElementById('poker-result');
+        let resHTML = document.getElementById('poker-result');
         if (index === data.correct) {
-            titleHtml.innerText = "Correct Valuation!";
-            titleHtml.style.color = "var(--success)";
+            resHTML.innerText = "Correct Valuation!";
+            resHTML.style.color = "var(--success)";
         } else {
-            titleHtml.innerText = "Incorrect.";
-            titleHtml.style.color = "var(--danger)";
+            resHTML.innerText = "Incorrect.";
+            resHTML.style.color = "var(--danger)";
         }
         document.getElementById('poker-explanation').innerText = data.explain;
     }
@@ -502,28 +514,126 @@
     loadPokerRound();
 
 
+    // --- FUNCTION 5: GAMBLER'S RUIN LOGIC ---
+    let gamblerMoney = 1000000;
+    let casinoMoney = 0;
+    let gambleCount = 0;
+    let historyGambler = [1000000];
+    let historyCasino = [0];
+    let gamblerLabels = [0];
+    let gamblerChartInstance = null;
+
+    function initGamblerChart() {
+        const ctx = document.getElementById('gamblerChart').getContext('2d');
+        gamblerChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: gamblerLabels,
+                datasets: [{
+                    label: 'Gambler Wealth ($)',
+                    data: historyGambler,
+                    borderColor: '#FF9800',
+                    backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                    fill: true,
+                    tension: 0.2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'USD ($)' } },
+                    x: { title: { display: true, text: 'Trials' } }
+                }
+            }
+        });
+    }
+
+    function playGamble(choice) {
+        if(gamblerMoney <= 100000) return; // Ruined (90% loss)
+
+        let bet = gamblerMoney * 0.10; 
+        let fee = bet * 0.01;          
+        
+        gamblerMoney -= fee;
+        casinoMoney += fee;
+        
+        let win = (Math.random() < 0.5); 
+        
+        if (win) {
+            gamblerMoney += bet; 
+            casinoMoney -= bet;
+        } else {
+            gamblerMoney -= bet;
+            casinoMoney += bet;
+        }
+
+        gambleCount++;
+        gamblerLabels.push(gambleCount);
+        historyGambler.push(gamblerMoney > 0 ? gamblerMoney : 0);
+        historyCasino.push(casinoMoney);
+
+        document.getElementById('gamble-count').innerText = gambleCount;
+        document.getElementById('gambler-wealth').innerText = `Your Wealth: $${Math.max(0, Math.round(gamblerMoney)).toLocaleString()}`;
+
+        gamblerChartInstance.update();
+
+        // Check for 90% loss
+        if (gamblerMoney <= 100000) {
+            document.getElementById('gambler-active').style.display = 'none';
+            document.getElementById('gambler-ruined').style.display = 'block';
+        }
+    }
+
+    function showCasinoChart() {
+        gamblerChartInstance.data.datasets = [{
+            label: 'Casino Accumulated Profit ($)',
+            data: historyCasino,
+            borderColor: '#2e7d32',
+            backgroundColor: 'rgba(46, 125, 50, 0.1)',
+            fill: true,
+            tension: 0.2
+        }];
+        gamblerChartInstance.update();
+        document.getElementById('gambler-ruined').innerHTML = "Notice how the Casino smoothly generates profit over time due to the law of large numbers and the inherent mathematical edge (Expense Ratio).";
+    }
+
     // --- CHARTS LOGIC (FUNCTIONS 3 & 4) ---
-    
     let goldChartInstance = null;
     let spyChartInstance = null;
 
     function renderGoldChart() {
         const ctx = document.getElementById('goldChart').getContext('2d');
-        const years = [1926, 1933, 1944, 1971, 1980, 2000, 2008, 2020, 2026];
-        const goldPrices = [20, 35, 35, 43, 850, 279, 869, 1898, 2400];
-        const inflationRates = [-1.0, -5.1, 1.7, 4.4, 13.5, 3.4, 3.8, 1.2, 3.5]; // Historical CPI Approx
         
-        const events = [
-            "1926: Post-WWI Gold Standard (~$20/oz).",
-            "1933: Gold Reserve Act. FDR makes private ownership illegal, reprices to $35.",
-            "1944: Bretton Woods. Global currencies pegged to Dollar, Dollar to Gold.",
-            "1971: Nixon Shock. Ends Gold Standard. Fiat era begins.",
-            "1980: Inflation peaks at 13.5%. Gold surges to $850. Volcker hikes rates.",
-            "2000: Dot Com Bubble Burst. Gold languishing.",
-            "2008: Great Financial Crisis. QE Begins.",
-            "2020: COVID-19 Pandemic. Unprecedented Stimulus.",
-            "2026: Persistent structural inflation fears (Present Day)."
-        ];
+        let years = [];
+        let goldPrices = [];
+        let cpiYoY = []; // Changed to YoY
+        
+        // Simulating data roughly modeling 1926 - 2026
+        let currentGold = 20.67; 
+        for(let y=1926; y<=2026; y++){
+            years.push(y);
+            let yoy = 2.0; // Default YoY %
+            
+            if(y < 1971) {
+                currentGold = y < 1934 ? 20.67 : 35.00; 
+                yoy = (y === 1930 || y === 1932) ? -5.0 : (y === 1942 || y === 1946) ? 8.5 : 1.5;
+            } else if (y >= 1971 && y < 1982) {
+                currentGold *= 1.35; 
+                yoy = (y === 1974 || y === 1979) ? 12.0 : 8.5; // Big Inflation spikes
+            } else if (y >= 1982 && y < 2000) {
+                currentGold = Math.max(250, currentGold * 0.95);
+                yoy = 3.5;
+            } else if (y >= 2000 && y < 2012) {
+                currentGold *= 1.15;
+                yoy = (y === 2008) ? 0.1 : 2.5;
+            } else {
+                currentGold *= 1.04;
+                yoy = (y === 2022) ? 8.0 : (y === 2024) ? 3.1 : 2.0;
+            }
+            goldPrices.push(currentGold);
+            cpiYoY.push(yoy);
+        }
 
         goldChartInstance = new Chart(ctx, {
             type: 'line',
@@ -531,57 +641,47 @@
                 labels: years,
                 datasets: [
                     {
-                        label: 'Gold Price (USD)',
+                        label: 'Gold Price (USD/oz)',
                         data: goldPrices,
-                        borderColor: '#f1c40f',
-                        backgroundColor: 'rgba(241, 196, 15, 0.2)',
-                        borderWidth: 3,
+                        borderColor: '#FFC107',
                         yAxisID: 'y',
-                        pointRadius: 6,
-                        pointHoverRadius: 10
+                        pointRadius: 1,
+                        tension: 0.1
                     },
                     {
-                        label: 'US Inflation Rate (%)',
-                        data: inflationRates,
-                        borderColor: '#e74c3c',
-                        backgroundColor: 'rgba(231, 76, 60, 0.2)',
-                        borderWidth: 2,
-                        borderDash: [5, 5],
+                        label: 'US CPI YoY (%)',
+                        data: cpiYoY,
+                        borderColor: '#F44336',
                         yAxisID: 'y1',
-                        pointRadius: 4,
-                        pointHoverRadius: 7
+                        pointRadius: 1,
+                        tension: 0.1
                     }
                 ]
             },
             options: {
-                responsive: true, maintainAspectRatio: false,
+                responsive: true,
+                maintainAspectRatio: false,
                 interaction: { mode: 'index', intersect: false },
+                scales: {
+                    x: { title: { display: true, text: 'Year (Detailed)' } },
+                    y: { type: 'linear', display: true, position: 'left', title: {display: true, text: 'Gold ($)'} },
+                    y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false }, title: {display: true, text: 'CPI YoY (%)'} },
+                },
                 plugins: {
                     tooltip: {
-                        padding: 12,
-                        titleFont: { size: 14 },
-                        bodyFont: { size: 13 },
                         callbacks: {
-                            afterBody: function(context) { 
-                                // Show the macro event in the tooltip cleanly
-                                return "\nEVENT:\n" + events[context[0].dataIndex]; 
+                            afterLabel: function(context) {
+                                let year = context.parsed.x + 1926;
+                                if(year === 1933) return "Executive Order 6102: Gold Confiscation";
+                                if(year === 1971) return "Nixon Shock: End of Gold Standard";
+                                if(year === 1974 || year === 1979) return "Massive 70s Stagflation Spikes";
+                                if(year === 1980) return "Volcker Rate Hikes Kill Inflation";
+                                if(year === 2008) return "Global Financial Crisis / Deflationary Fear";
+                                if(year === 2020) return "COVID Pandemic / Trillions Printed";
+                                if(year === 2022) return "40-Year Inflation Highs (8%+)";
+                                return "";
                             }
                         }
-                    }
-                },
-                scales: {
-                    x: { title: {display: true, text: 'Year'} },
-                    y: { 
-                        type: 'logarithmic', 
-                        position: 'left',
-                        title: {display: true, text: 'Gold Price ($) - Log Scale'},
-                        grid: { color: '#eee' }
-                    },
-                    y1: { 
-                        type: 'linear', 
-                        position: 'right',
-                        title: {display: true, text: 'Inflation CPI (%)'},
-                        grid: { drawOnChartArea: false } // Prevent grid line overlap
                     }
                 }
             }
@@ -590,65 +690,76 @@
 
     function renderSpyChart() {
         const ctx = document.getElementById('spyChart').getContext('2d');
-        // Detailed year-by-year data
-        const years = [2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
-        const spyPrices = [141, 146, 90, 111, 125, 125, 142, 184, 205, 204, 223, 267, 250, 323, 375, 476, 383, 476, 510, 540, 560]; 
         
-        // Only specific years have major event comments to highlight them
-        const events = {
-            2006: "Housing Bubble Peaking. Subprime expanding.",
-            2008: "Lehman Brothers Collapse. Great Financial Crisis.",
-            2009: "Market Bottom (March) & Federal Reserve QE1.",
-            2011: "US Credit Downgrade (S&P). European Debt Crisis.",
-            2018: "US-China Trade War & 'Volmageddon'. Fed hikes too fast.",
-            2020: "COVID-19 Crash & Instant V-Recovery via $Trillions in stimulus.",
-            2022: "Inflation Peaks at 9%. Fed hikes rates aggressively. Tech routed.",
-            2024: "AI Boom (NVDA, MSFT) drives market to All-Time Highs."
-        };
-
-        // Make data points larger ONLY if there is an event
-        const pointRadii = years.map(y => events[y] ? 8 : 3);
-        const pointColors = years.map(y => events[y] ? '#e74c3c' : '#2980b9');
+        let years = [];
+        let spyPrices = [
+            130, 145, 90, 110, 125, // 2006-2010
+            125, 142, 184, 205, 204, // 2011-2015
+            223, 267, 250, 323, 370, // 2016-2020
+            476, 383, 470, 510, 520, 530 // 2021-2026
+        ];
+        
+        let pointColors = [];
+        for(let y=2006; y<=2026; y++){
+            years.push(y);
+            
+            // Assign specific colors for Macro Events
+            if (y === 2008 || y === 2011 || y === 2018 || y === 2020 || y === 2022) {
+                pointColors.push('red'); // Negative Macros
+            } else if (y === 2009 || y === 2013 || y === 2021 || y === 2024 || y === 2026) {
+                pointColors.push('green'); // Positive Macros
+            } else {
+                pointColors.push('black'); // Neutral
+            }
+        }
 
         spyChartInstance = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: years,
                 datasets: [{
-                    label: 'SPY Price (USD)',
+                    label: 'SPY ETF Price ($)',
                     data: spyPrices,
-                    borderColor: '#2980b9',
-                    backgroundColor: 'rgba(41, 128, 185, 0.1)',
-                    borderWidth: 3,
-                    tension: 0.3, // smooth curves
-                    pointRadius: pointRadii,
+                    borderColor: '#00b4d8',
+                    backgroundColor: 'rgba(0, 180, 216, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 6,
+                    pointHoverRadius: 9,
                     pointBackgroundColor: pointColors,
-                    pointHoverRadius: 10
+                    pointBorderColor: pointColors
                 }]
             },
             options: {
-                responsive: true, maintainAspectRatio: false,
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: false, title: { display: true, text: 'Price ($)' } },
+                    x: { title: { display: true, text: 'Year' } }
+                },
                 plugins: {
                     tooltip: {
-                        padding: 12,
                         callbacks: {
-                            label: function(context) { return "SPY: $" + context.raw; },
-                            afterLabel: function(context) { 
+                            afterLabel: function(context) {
                                 let year = context.label;
-                                if(events[year]) return "\nEVENT: " + events[year];
-                                return ""; 
+                                if(year == "2008") return "Negative: Subprime Mortgage Crisis Peak";
+                                if(year == "2009") return "Positive: QE1 Begins, Market Bottoms";
+                                if(year == "2011") return "Negative: US Debt Downgrade Flash Crash";
+                                if(year == "2013") return "Positive: Taper Tantrum resolved, massive bull run";
+                                if(year == "2018") return "Negative: US-China Trade War & Rate Hikes";
+                                if(year == "2020") return "Negative: COVID-19 Global Pandemic Shutdown";
+                                if(year == "2021") return "Positive: Meme Stocks & Stimulus Peak";
+                                if(year == "2022") return "Negative: Fed Funds Rate Aggressive Hiking Cycle";
+                                if(year == "2024") return "Positive: AI Boom & Rate Cut Anticipation";
+                                return "Neutral: Standard Market Flow";
                             }
                         }
                     }
-                },
-                scales: {
-                    y: { title: {display: true, text: 'SPY ETF Price ($)'} },
-                    x: { title: {display: true, text: 'Year'} }
                 }
             }
         });
     }
-
 </script>
+
 </body>
 </html>
