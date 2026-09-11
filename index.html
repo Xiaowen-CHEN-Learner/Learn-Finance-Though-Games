@@ -488,6 +488,14 @@
         const ctx = document.getElementById('goldChart').getContext('2d');
         const years = window.INVESTMENT_RETURNS.map(row => row.year);
         const events={
+        const specs = [['sp500','S&P 500','#0077b6'],['housing','Housing','#8e44ad'],['bond','Bonds','#00a676'],['gold','Gold','#d49b00'],['inflation','Cash purchasing power','#607d8b']];
+        goldChartInstance = new Chart(ctx,{type:'line',data:{labels:years,datasets:specs.map(([key,label,color])=>({label,data:compoundSeries(key),borderColor:color,backgroundColor:color,pointBackgroundColor:years.map(y=>events[y]?'#f44336':color),pointRadius:years.map(y=>events[y]?6:1.5),pointHoverRadius:7,spanGaps:false,borderWidth:key==='sp500'?3:2,tension:0.15}))},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{tooltip:{callbacks:{label:c=>`${c.dataset.label}: $${c.parsed.y.toLocaleString(undefined,{maximumFractionDigits:2})}`,afterBody:items=>{const y=items[0]?.label;return events[y]?`EVENT: ${events[y]}`:'';}}}},scales:{x:{title:{display:true,text:'Year'}},y:{type:'logarithmic',title:{display:true,text:'Growth of $100 (log scale)'},ticks:{callback:v=>'$'+Number(v).toLocaleString()}}}}});
+    }
+    function renderSpyChart() {
+        const ctx = document.getElementById('spyChart').getContext('2d');
+        const labels = window.SPY_MONTHLY.map(row=>row.month);
+        const prices = window.SPY_MONTHLY.map(row=>row.close);
+        const events={
                       '2016-11':{text:'US election and post-election reflation rally',type:'positive'},
                       '2018-02':{text:'Volatility shock / Volmageddon',type:'negative'},
                       '2018-03':{text:'US-China trade tensions escalate',type:'negative'},
@@ -514,15 +522,7 @@
                       '2026-01':{text:'AI optimism pushes S&P 500 above 7,000',type:'positive'},
                       '2026-03':{text:'Iran conflict, oil-price surge and inflation fears',type:'negative'},
                       '2026-08':{text:'Strong AI-driven earnings support record-high equity market',type:'positive'}
-                       };
-        const specs = [['sp500','S&P 500','#0077b6'],['housing','Housing','#8e44ad'],['bond','Bonds','#00a676'],['gold','Gold','#d49b00'],['inflation','Cash purchasing power','#607d8b']];
-        goldChartInstance = new Chart(ctx,{type:'line',data:{labels:years,datasets:specs.map(([key,label,color])=>({label,data:compoundSeries(key),borderColor:color,backgroundColor:color,pointBackgroundColor:years.map(y=>events[y]?'#f44336':color),pointRadius:years.map(y=>events[y]?6:1.5),pointHoverRadius:7,spanGaps:false,borderWidth:key==='sp500'?3:2,tension:0.15}))},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{tooltip:{callbacks:{label:c=>`${c.dataset.label}: $${c.parsed.y.toLocaleString(undefined,{maximumFractionDigits:2})}`,afterBody:items=>{const y=items[0]?.label;return events[y]?`EVENT: ${events[y]}`:'';}}}},scales:{x:{title:{display:true,text:'Year'}},y:{type:'logarithmic',title:{display:true,text:'Growth of $100 (log scale)'},ticks:{callback:v=>'$'+Number(v).toLocaleString()}}}}});
-    }
-    function renderSpyChart() {
-        const ctx = document.getElementById('spyChart').getContext('2d');
-        const labels = window.SPY_MONTHLY.map(row=>row.month);
-        const prices = window.SPY_MONTHLY.map(row=>row.close);
-        const events={'2016-11':{text:'US election',type:'neutral'},'2018-02':{text:'Volatility shock',type:'negative'},'2020-03':{text:'COVID-19 market crash',type:'negative'},'2020-11':{text:'Vaccine announcements',type:'positive'},'2022-03':{text:'Federal Reserve rate-hike cycle begins',type:'negative'},'2022-11':{text:'ChatGPT launch and generative-AI adoption cycle',type:'neutral'},'2023-11':{text:'Disinflation and rate-pause optimism',type:'positive'}};
+                       };        
         const names=labels.map(m=>events[m]?.text||null);
         const colors=labels.map(m=>events[m]?(events[m].type==='positive'?'#4caf50':events[m].type==='negative'?'#f44336':'#111'):'rgba(0,119,182,0.15)');
         spyChartInstance=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'SPY Month-End Close ($)',data:prices,borderColor:'#0a192f',backgroundColor:'rgba(0,180,216,0.12)',pointBackgroundColor:colors,pointRadius:labels.map(m=>events[m]?7:1.5),pointHoverRadius:8,fill:true,tension:0.12,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{tooltip:{callbacks:{label:c=>`Close: $${c.parsed.y.toFixed(2)}`,afterLabel:c=>names[c.dataIndex]?`EVENT: ${names[c.dataIndex]}`:''}}},scales:{x:{title:{display:true,text:'Month'},ticks:{maxTicksLimit:14}},y:{title:{display:true,text:'SPY closing price ($)'}}}}});
