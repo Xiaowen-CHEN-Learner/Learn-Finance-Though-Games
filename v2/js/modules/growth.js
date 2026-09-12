@@ -1,8 +1,8 @@
 /*
  * Module 3: Long-Term Asset Growth. Uses only window.INVESTMENT_RETURNS
- * from market-data.js (sourced from the supplied 1926-2025 dataset).
- * Compounding is calculated client-side from the real annual return rows;
- * no prices are invented and no gaps are filled in.
+ * from market-data.js (1926-2025 plus a 2026 YTD row; see README for
+ * sourcing/corrections). Compounding is calculated client-side from the
+ * real annual return rows; no prices are invented.
  */
 (function () {
     let chart = null;

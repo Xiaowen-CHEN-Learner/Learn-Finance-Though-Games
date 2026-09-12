@@ -146,13 +146,13 @@
 
     <!-- MODULE 3: GROWTH -->
     <section id="tab-growth" class="tab-panel" role="tabpanel" aria-labelledby="tabbtn-growth">
-        <h2>3. Long-Term Asset Growth (1926 - 2025)</h2>
+        <h2>3. Long-Term Asset Growth (1926 - 2026 YTD)</h2>
         <p class="module-intro">Growth of $100 compounded from real annual returns for the S&amp;P 500, housing, bonds, gold, and cash purchasing power. Vertical axis is logarithmic. Click a legend item to toggle it.</p>
-        <div class="chart-container"><canvas id="goldChart" role="img" aria-label="Line chart of growth of $100 from 1926 to 2025 across five asset classes"></canvas></div>
+        <div class="chart-container"><canvas id="goldChart" role="img" aria-label="Line chart of growth of $100 from 1926 to 2026 year-to-date across five asset classes"></canvas></div>
         <div class="chart-legend" id="growth-legend"></div>
         <div class="source-note">
-            <strong>Source & methodology:</strong> 1926–2025 annual returns dataset (inflation, S&amp;P 500, housing, bonds, gold). Values are compounded client-side from the supplied annual return rates — no prices are invented.
-            <strong>Missing data:</strong> 1960 has no observation in the source dataset and is left as a gap, not interpolated. Housing and bond observations end in 2020; no values are invented after that.
+            <strong>Source & methodology:</strong> 1926–2025 annual returns plus a 2026 year-to-date row (inflation, S&amp;P 500, housing, bonds, gold), corrected and extended from the original compiled dataset &mdash; see README for full provenance and sourcing by column. Values are compounded client-side from the supplied annual return rates — no prices are invented.
+            <strong>2026 YTD caveat:</strong> the final point is a latest-available-observation snapshot, not a synchronized same-date comparison — each column's cutoff date differs (see README). Treat it as directional, not a completed year.
         </div>
     </section>
 
