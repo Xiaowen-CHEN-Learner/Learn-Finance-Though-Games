@@ -130,7 +130,7 @@
     <button class="tab-btn active" onclick="openTab('tab-home')">Home</button>
     <button class="tab-btn" onclick="openTab('tab-game')">1. Institutional Trading</button>
     <button class="tab-btn" onclick="openTab('tab-bias')">2. Cognitive Bias</button>
-    <button class="tab-btn" onclick="openTab('tab-gold')">3. Long-Term Asset Growth</button>
+    <button class="tab-btn" onclick="openTab('tab-gold')">3. Asset Price History</button>
     <button class="tab-btn" onclick="openTab('tab-spy')">4. SPY Macros</button>
     <button class="tab-btn" onclick="openTab('tab-gambler')">5. Why gamblers lose</button>
     <button class="tab-btn" onclick="openTab('tab-poker')">6. Expected Value (Poker)</button>
@@ -223,7 +223,7 @@
 
     <!-- FUNCTION 3: GOLD & INFLATION -->
     <div id="tab-gold" class="tab-content">
-        <h2>3. Long-Term Asset Growth (1926 - 2026)</h2>
+        <h2>3. Asset Price History (1926 - 2026)</h2>
         <p>Historical growth of $100 compounded from annual returns for the S&amp;P 500, housing, bonds, gold, and cash purchasing power. The vertical axis is logarithmic. The final point is a 2026 year-to-date snapshot &mdash; each series uses its own latest available observation date, not one common cutoff.</p>
         <div class="chart-container">
             <canvas id="goldChart"></canvas>
@@ -487,7 +487,7 @@
     function renderGoldChart() {
         const ctx = document.getElementById('goldChart').getContext('2d');
         const years = window.INVESTMENT_RETURNS.map(row => row.year);
-        const events = {1933:'US gold policy changed during the Great Depression',1971:'End of US dollar convertibility into gold',1980:'Inflation and gold cycle peak',2008:'Global Financial Crisis',2020:'COVID-19 shock and policy response'};
+        const events={1933:'US gold policy changed during the Great Depression',1971:'End of US dollar convertibility into gold',1980:'Inflation and gold cycle peak',2008:'Global Financial Crisis',2020:'COVID-19 shock and policy response'};
         const specs = [['sp500','S&P 500','#0077b6'],['housing','Housing','#8e44ad'],['bond','Bonds','#00a676'],['gold','Gold','#d49b00'],['inflation','Cash purchasing power','#607d8b']];
         goldChartInstance = new Chart(ctx,{type:'line',data:{labels:years,datasets:specs.map(([key,label,color])=>({label,data:compoundSeries(key),borderColor:color,backgroundColor:color,pointBackgroundColor:years.map(y=>events[y]?'#f44336':color),pointRadius:years.map(y=>events[y]?6:1.5),pointHoverRadius:7,spanGaps:false,borderWidth:key==='sp500'?3:2,tension:0.15}))},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{tooltip:{callbacks:{label:c=>`${c.dataset.label}: $${c.parsed.y.toLocaleString(undefined,{maximumFractionDigits:2})}`,afterBody:items=>{const y=items[0]?.label;return events[y]?`EVENT: ${events[y]}`:'';}}}},scales:{x:{title:{display:true,text:'Year'}},y:{type:'logarithmic',title:{display:true,text:'Growth of $100 (log scale)'},ticks:{callback:v=>'$'+Number(v).toLocaleString()}}}}});
     }
@@ -495,7 +495,34 @@
         const ctx = document.getElementById('spyChart').getContext('2d');
         const labels = window.SPY_MONTHLY.map(row=>row.month);
         const prices = window.SPY_MONTHLY.map(row=>row.close);
-        const events={'2016-11':{text:'US election',type:'neutral'},'2018-02':{text:'Volatility shock',type:'negative'},'2020-03':{text:'COVID-19 market crash',type:'negative'},'2020-11':{text:'Vaccine announcements',type:'positive'},'2022-03':{text:'Federal Reserve rate-hike cycle begins',type:'negative'},'2022-11':{text:'ChatGPT launch and generative-AI adoption cycle',type:'neutral'},'2023-11':{text:'Disinflation and rate-pause optimism',type:'positive'}};
+        const events={
+                      '2016-11':{text:'US election and post-election reflation rally',type:'positive'},
+                      '2018-02':{text:'Volatility shock / Volmageddon',type:'negative'},
+                      '2018-03':{text:'US-China trade tensions escalate',type:'negative'},
+                      '2018-12':{text:'Fed tightening and global-growth fears',type:'negative'},
+                      '2019-01':{text:'Fed policy pivot toward patience',type:'positive'},
+                      '2019-08':{text:'Trade-war escalation and yield-curve inversion fears',type:'negative'},
+                      '2020-03':{text:'COVID-19 global market crash',type:'negative'},
+                      '2020-04':{text:'Massive Fed and fiscal-policy support drives recovery',type:'positive'},
+                      '2020-11':{text:'COVID-19 vaccine announcements',type:'positive'},
+                      '2021-11':{text:'Omicron variant and Fed tightening expectations',type:'negative'},
+                      '2022-02':{text:'Russia-Ukraine war begins',type:'negative'},
+                      '2022-03':{text:'Federal Reserve rate-hike cycle begins',type:'negative'},
+                      '2022-06':{text:'Inflation shock and aggressive Fed tightening',type:'negative'},
+                      '2022-11':{text:'Cooling inflation and ChatGPT launch begin new market narratives',type:'neutral'},
+                      '2023-03':{text:'Silicon Valley Bank and regional-banking crisis',type:'negative'},
+                      '2023-05':{text:'Generative-AI and semiconductor rally accelerates',type:'positive'},
+                      '2023-11':{text:'Disinflation and Fed rate-pause optimism',type:'positive'},
+                      '2024-08':{text:'Yen carry-trade unwind and US recession scare',type:'negative'},
+                      '2024-09':{text:'Federal Reserve begins rate-cut cycle',type:'positive'},
+                      '2024-11':{text:'US election and policy repricing',type:'neutral'},
+                      '2025-04':{text:'Sweeping US tariff announcement triggers global selloff',type:'negative'},
+                      '2025-05':{text:'US-China tariff truce drives relief rally',type:'positive'},
+                      '2025-09':{text:'Federal Reserve resumes rate cuts',type:'positive'},
+                      '2026-01':{text:'AI optimism pushes S&P 500 above 7,000',type:'positive'},
+                      '2026-03':{text:'Iran conflict, oil-price surge and inflation fears',type:'negative'},
+                      '2026-08':{text:'Strong AI-driven earnings support record-high equity market',type:'positive'}
+                       };        
         const names=labels.map(m=>events[m]?.text||null);
         const colors=labels.map(m=>events[m]?(events[m].type==='positive'?'#4caf50':events[m].type==='negative'?'#f44336':'#111'):'rgba(0,119,182,0.15)');
         spyChartInstance=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'SPY Month-End Close ($)',data:prices,borderColor:'#0a192f',backgroundColor:'rgba(0,180,216,0.12)',pointBackgroundColor:colors,pointRadius:labels.map(m=>events[m]?7:1.5),pointHoverRadius:8,fill:true,tension:0.12,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{tooltip:{callbacks:{label:c=>`Close: $${c.parsed.y.toFixed(2)}`,afterLabel:c=>names[c.dataIndex]?`EVENT: ${names[c.dataIndex]}`:''}}},scales:{x:{title:{display:true,text:'Month'},ticks:{maxTicksLimit:14}},y:{title:{display:true,text:'SPY closing price ($)'}}}}});
@@ -596,7 +623,13 @@
         { q: "The pot is $100. Opponent bets $20. You must call $20 to win $120 total. You estimate you have a 25% chance of hitting your winning flush on the river. EV?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Pot:+$100+%7C+Bet:+$20", opts: ["Call (+EV)", "Fold (-EV)"], correct: 0, explain: "Pot odds: Pay $20 to win $120 (14.2% equity needed). 25% equity > 14.2% needed, so calling is highly profitable (+EV)." },
         { q: "Pre-flop. You hold AKo. Opponent reveals QQ. Equity in this exact spot?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=AK+vs+QQ+(Coin+Flip)", opts: ["~20%", "~43%", "~60%"], correct: 1, explain: "43%. The classic 'Coin Flip'. The made pair (QQ) is a slight favorite (approx 57%) over two overcards pre-flop." },
         { q: "Pre-flop. You hold AA. Opponent holds KK. Win rate for Aces?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Pocket+Aces+vs+Pocket+Kings", opts: ["~65%", "~81%", "~95%"], correct: 1, explain: "81%. Aces dominate Kings pre-flop. KK only has two outs (the other two Kings) to win, making AA an overwhelming favorite." },
-        { q: "You hold an open-ended straight draw (8 outs) on the turn. What is roughly your probability of hitting the straight on the river?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Open-Ended+Straight+Draw", opts: ["~8%", "~17%", "~32%"], correct: 1, explain: "17%. Rule of 2: Multiply your outs (8) by 2 for one street. 8 x 2 = 16% (roughly 17.4% exact)." }
+        { q: "You hold an open-ended straight draw (8 outs) on the turn. What is roughly your probability of hitting the straight on the river?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Open-Ended+Straight+Draw", opts: ["~8%", "~17%", "~32%"], correct: 1, explain: "17%. Rule of 2: Multiply your outs (8) by 2 for one street. 8 x 2 = 16% (roughly 17.4% exact)." },
+        { q: "Your opponent bets big on the river. Based on their line, you put them on a bluff 30% of the time. Call to win $375, or fold. EV?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Hand+5+%E2%80%94+Bluff+Catching+%7C+Pot:+$300+%7C+Bet:+$75", opts: ["Call (+EV)", "Fold (-EV)"], correct: 0, explain: "Call. EV = (0.30 × $375) − (0.70 × $75) = $112.50 − $52.50 = +$60." },
+        { q: "Pre-flop. You hold 22. Opponent reveals AKo. Equity in this exact spot?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Hand+6+%E2%80%94+22+vs+AK+(Coin+Flip)", opts: ["~35%", "~52%", "~70%"], correct: 1, explain: "~52%. A small pocket pair vs two overcards is close to a true coinflip since AK only improves to a pair ~1/3 of the time." },
+        { q: "You have 9 outs to a flush with two cards left to see. What's your rough probability of hitting?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Hand+7+%E2%80%94+Flush+Draw+on+the+Flop", opts: ["~19%", "~35%", "~50%"], correct: 1, explain: "~35%. Rule of 4: 9 outs × 4 ≈ 36% (actual ≈ 35%)." },
+        { q: "You have 4 outs on the turn, one card to come. Probability of hitting the river?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Hand+8+%E2%80%94+Gutshot+Straight+Draw", opts: ["~4%", "~8%", "~16%"], correct: 1, explain: "~8%. Rule of 2: 4 outs × 2 = 8% (actual ≈ 8.7%)." },
+        { q: "Flop: dry board. You flopped a set. Opponent has top pair, top kicker. Your equity?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Hand+9+%E2%80%94+Set+vs+Top+Pair", opts: ["~65%", "~80%", "~91%"], correct: 2, explain: "~91%. A flopped set against one pair on a dry board is a massive favorite — opponent needs to catch two pair, trips, or better on turn/river." },
+        { q: "The pot is $500 and your opponent bets $100. You have a flush draw missing one card (≈19.6% to hit). You must call $100 to win $600 total. EV?", img: "https://placehold.co/600x200/0a192f/00b4d8?text=Hand+10+%E2%80%94+Marginal+Pot+Odds+Call+%7C+Pot:+$500+%7C+Bet:+$100", opts: ["Call (+EV)", "Fold (-EV)"], correct: 0, explain: "Call. Pot odds needed = 100/600 = 16.7%, and your 19.6% equity clears that bar → +EV." }
     ];
 
     function loadPokerRound() {
