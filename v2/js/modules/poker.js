@@ -1,9 +1,8 @@
 /*
  * Module 6: Expected Value (Poker). Scenarios and answer keys match V1
- * (pot odds, preflop equities, rule-of-2/4 outs). Three explanations differ
- * from V1 because V1's figures were wrong: 22 vs AKo and set vs top pair
- * equities were checked by exact enumeration, and pot odds use call / (pot
- * after call) as in hand 1. Difficulty tags are added editorial metadata;
+ * (pot odds, preflop equities, rule-of-2/4 outs). Preflop and set equities
+ * were checked by exact enumeration; pot odds use call / (pot after call),
+ * as in hand 1. Difficulty tags are added editorial metadata;
  * questions are kept sorted easiest-to-hardest. Placeholder
  * images replaced with a local CSS panel (removes an external image
  * dependency).
@@ -11,7 +10,7 @@
 (function () {
     const pokerData = [
         { difficulty: 'Beginner', visual: 'Pot: $100 · Opponent bets $20', q: "The pot is $100. Opponent bets $20. You must call $20 to win $120 total. You estimate you have a 25% chance of hitting your winning flush on the river. EV?", opts: ["Call (+EV)", "Fold (-EV)"], correct: 0, explain: "Pot odds: Pay $20 to win $120 (14.2% equity needed). 25% equity > 14.2% needed, so calling is highly profitable (+EV)." },
-        { difficulty: 'Intermediate', visual: 'A♠ K♠ vs Q♥ Q♦ — preflop', q: "Pre-flop. You hold AKo. Opponent reveals QQ. Equity in this exact spot?", opts: ["~20%", "~43%", "~60%"], correct: 1, explain: "43%. The classic 'Coin Flip'. The made pair (QQ) is a slight favorite (approx 57%) over two overcards pre-flop." },
+        { difficulty: 'Intermediate', visual: 'A♠ K♦ vs Q♥ Q♣ — preflop', q: "Pre-flop. You hold AKo. Opponent reveals QQ. Equity in this exact spot?", opts: ["~20%", "~43%", "~60%"], correct: 1, explain: "43%. The classic 'Coin Flip'. The made pair (QQ) is a slight favorite (approx 57%) over two overcards pre-flop." },
         { difficulty: 'Intermediate', visual: 'A♠ A♥ vs K♠ K♥ — preflop', q: "Pre-flop. You hold AA. Opponent holds KK. Win rate for Aces?", opts: ["~65%", "~81%", "~95%"], correct: 1, explain: "81%. Aces dominate Kings pre-flop. KK only has two outs (the other two Kings) to win, making AA an overwhelming favorite." },
         { difficulty: 'Intermediate', visual: 'River · Pot: $300 · Opponent bets $75', q: "Your opponent bets big on the river. Based on their line, you put them on a bluff 30% of the time. Call to win $375, or fold. EV?", opts: ["Call (+EV)", "Fold (-EV)"], correct: 0, explain: "Call. EV = (0.30 × $375) − (0.70 × $75) = $112.50 − $52.50 = +$60." },
         { difficulty: 'Intermediate', visual: '2♠ 2♦ vs A♥ K♣ — preflop', q: "Pre-flop. You hold 22. Opponent reveals AKo. Equity in this exact spot?", opts: ["~35%", "~52%", "~70%"], correct: 1, explain: "~52% (53% exact). A small pocket pair vs two overcards is close to a true coin flip: AK pairs an Ace or King by the river only about half the time (50.3%)." },
