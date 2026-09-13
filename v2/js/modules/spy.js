@@ -18,6 +18,11 @@
         '2023-11': { text: 'Disinflation and rate-pause optimism', type: 'positive' },
     };
 
+    function onShow() {
+        App.recordModuleScore('spy', 100);
+        render();
+    }
+
     function render() {
         if (chart) return;
         const rows = window.SPY_MONTHLY;
@@ -66,9 +71,7 @@
             `<strong>Source:</strong> Nasdaq daily SPY history, sampled to month-end close. ` +
             `Range: ${first.date} to ${last.date}. The final month (${last.month}) is partial — data ends ${last.date}, not month-end. ` +
             `Prices shown are raw closing prices, not adjusted-close and not total return (no dividend reinvestment).`;
-
-        App.recordModuleScore('spy', 100);
     }
 
-    window.Modules['tab-spy'] = { onShow: render };
+    window.Modules['tab-spy'] = { onShow };
 })();

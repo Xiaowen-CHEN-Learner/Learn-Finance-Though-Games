@@ -27,7 +27,7 @@ v2/
 ## Data integrity
 
 All historical data comes from the same two source datasets used at the repo root — copied here, not regenerated or altered:
-- `data/investment_returns.csv` — 1926–2025 annual returns (S&P 500, housing, bonds, gold, inflation). 1960 is genuinely missing from the source and is left as a gap. Housing/bond data ends in 2020.
+- `data/investment_returns.csv` — 1926–2025 annual returns (S&P 500, housing, bonds, gold, inflation), plus a 2026 year-to-date row. The 1960 row, previously missing, has been restored via sourced reconstruction, and housing/bond are filled through 2025. The 2026 row mixes each column's own latest observation date rather than one common cutoff — see the root `README.md` for full provenance and per-column sourcing.
 - `data/spy_historical.csv` — daily SPY closing prices, September 2016 – September 9, 2026. The chart samples this to month-end closes; this is stated on the chart itself, along with the fact these are raw closing prices (not adjusted-close, not total return).
 
 Randomness (`Math.random()`) is used in exactly one place: the Gambler's Ruin module, where it's the intentional subject of the lesson. Nowhere else does the app generate or simulate market data.

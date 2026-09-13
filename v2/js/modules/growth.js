@@ -32,6 +32,11 @@
         });
     }
 
+    function onShow() {
+        App.recordModuleScore('growth', 100);
+        render();
+    }
+
     function render() {
         if (chart) return;
         const years = window.INVESTMENT_RETURNS.map(r => r.year);
@@ -90,9 +95,7 @@
                 chart.update();
             });
         });
-
-        App.recordModuleScore('growth', 100);
     }
 
-    window.Modules['tab-growth'] = { onShow: render };
+    window.Modules['tab-growth'] = { onShow };
 })();
