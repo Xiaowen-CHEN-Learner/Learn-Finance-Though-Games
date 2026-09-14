@@ -76,14 +76,11 @@
         document.getElementById('gambler-ruined').style.display = 'block';
         const change = wealth - START_WEALTH;
         const costs = App.formatCurrency(cumulativeExpense);
-        let message;
-        if (wealth <= RUIN_THRESHOLD) {
-            message = 'You lost 90% of your money! Math and expense ratios eventually win.';
-        } else if (change < 0) {
-            message = `After ${trials} trials you're down ${App.formatCurrency(-change)}. Expense ratios alone cost you ${costs}.`;
-        } else {
-            message = `After ${trials} trials you're up ${App.formatCurrency(change)} — that's luck, not an edge. You still paid ${costs} in expense ratios, and every bet had negative expected value.`;
-        }
+        // No separate ruin message: with the 30-trial cap, falling to the ruin threshold needs
+        // at least 22 losses against at most 4 wins (~0.003%), so a ruined run also gets the "down" text.
+        const message = change < 0
+            ? `After ${trials} trials you're down ${App.formatCurrency(-change)}. Expense ratios alone cost you ${costs}.`
+            : `After ${trials} trials you're up ${App.formatCurrency(change)} — that's luck, not an edge. You still paid ${costs} in expense ratios, and every bet had negative expected value.`;
         document.getElementById('gambler-ruined-text').textContent = message;
         renderCheck();
     }

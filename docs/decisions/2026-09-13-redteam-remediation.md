@@ -3,7 +3,7 @@
 - **Repository:** `Xiaowen-CHEN-Learner/Learn-Finance-Though-Games`
 - **Status as of:** September 13, 2026 (ET), `main` at `b508311`
 - **Scope:** full-repository red-team of V1 (`index.html`) and V2 (`v2/`), run September 13, 2026
-- **Remediation merged:** PR #5 (`6499037`) and PR #4 (`b508311`), both merged by Xiaowen-CHEN-Learner and live on GitHub Pages
+- **Remediation merged:** PR #5 (`6499037`) and PR #4 (`b508311`), both merged by Xiaowen-CHEN-Learner and live on GitHub Pages. RT-15 is fixed in PR #6, alongside this document.
 
 ## Summary
 
@@ -11,9 +11,8 @@
 
 | Status | Count | Findings |
 |---|---:|---|
-| Resolved | 16 | RT-01, 02, 04–14, 18–20 |
+| Resolved | 17 | RT-01, 02, 04–15, 18–20 |
 | Partly resolved | 1 | RT-03 |
-| Open (low) | 1 | RT-15 |
 | Accepted | 1 | RT-16 |
 | Withdrawn | 1 | RT-17 |
 
@@ -88,7 +87,7 @@
 | RT-12 | 10x bets could run past the 30-trial limit | Resolved | Batches stop at the limit | PR #5, `gambler.js` |
 | RT-13 | Windows download-metadata files could be committed | Resolved | `*:Zone.Identifier` ignored; the colon in those filenames can't be checked out on Windows | PR #5, `.gitignore` |
 | RT-14 | Maintainer's internal-documents index was out of date | Resolved | Rewritten against the files on disk (local notes, not in the repo) | — |
-| RT-15 | The "lost 90%" ruin message almost never appears | **Open** | With the 30-trial cap, ruin needs at least 22 losses against no more than 4 wins: about a 0.003% chance. Needs a design choice (see below) | `gambler.js` |
+| RT-15 | The "lost 90%" ruin message almost never appeared in V2 | Resolved | With the 30-trial cap, ruin needs at least 22 losses against no more than 4 wins: about a 0.003% chance. Message removed by owner decision; a run that hits the threshold now gets the "down" message. V1 is unchanged, since it has no trial cap and its ruin message is reachable | PR #6, `v2/js/modules/gambler.js` |
 | RT-16 | "Bet BIG" and "Bet SMALL" behave identically | Accepted | Both are 50/50, so the odds are unaffected; arguably part of the lesson | `gambler.js`, `index.html` |
 | RT-17 | README says the first column was "renumbered" | Withdrawn | The current CSV has no index column, but the original download may have had one; the claim can't be shown wrong | `README.md` §3 |
 
@@ -146,4 +145,3 @@ These are recommendations; none is enforced or automated yet.
 | Data | **Commit the data-bundle generator.** `market-data.js` is generated, but its build script isn't in the repo. A rebuild script reproduced the prior bundle byte-for-byte; committing it would make regeneration reviewable. |
 | Dependencies | **Upgrade Chart.js deliberately.** When moving past 4.5.1, change the version and the `integrity` hash together in both `index.html` files, then check every chart renders. |
 | Testing | **Script the browser checks.** Verification used ad-hoc headless Edge runs. A repeatable smoke test (tabs, charts, gambler outcomes, scoring) would catch regressions before merge. |
-| Decision | **Resolve RT-15.** Choose whether the ruin message should be reachable (raise the trial cap or lower the ruin threshold) or removed. |

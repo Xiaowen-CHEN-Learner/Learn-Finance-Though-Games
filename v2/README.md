@@ -58,7 +58,7 @@ No personal or identifying data is stored. A level (Retail Investor → Junior A
 - **Bias:** score = % correct on your *first* answer to each question. You can go back and re-answer after reading the explanation, but that doesn't change the score.
 - **Poker:** score = % correct (one answer per hand).
 - **Growth / SPY:** passive/informational; credited 100 each time the module is opened.
-- **Gambler's Ruin:** after ruin or 30 trials, a short comprehension check asks *why* a fair-odds game still loses money (the expense-ratio drag). A correct answer scores 100, a wrong one 0. The end-of-round message reflects whether you actually finished up or down. 10x bets stop at the 30-trial limit.
+- **Gambler's Ruin:** after ruin or 30 trials, a short comprehension check asks *why* a fair-odds game still loses money (the expense-ratio drag). A correct answer scores 100, a wrong one 0. The end-of-round message reflects whether you actually finished up or down; a run that hits the ruin threshold gets the "down" message, since there is no separate ruin message. 10x bets stop at the 30-trial limit.
 
 ## Known limitations
 
