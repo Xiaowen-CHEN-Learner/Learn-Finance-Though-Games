@@ -14,7 +14,7 @@
         ['inflation', 'Cash purchasing power', '#607d8b'],
     ];
     const EVENTS = {
-        1933: 'US gold policy changed during the Great Depression',
+        1934: 'Gold Reserve Act revalues gold from $20.67 to $35 per ounce',
         1971: 'End of US dollar convertibility into gold',
         1980: 'Inflation and gold cycle peak',
         2008: 'Global Financial Crisis',

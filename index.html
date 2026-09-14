@@ -487,7 +487,7 @@
     function renderGoldChart() {
         const ctx = document.getElementById('goldChart').getContext('2d');
         const years = window.INVESTMENT_RETURNS.map(row => row.year);
-        const events={1933:'US gold policy changed during the Great Depression',1971:'End of US dollar convertibility into gold',1980:'Inflation and gold cycle peak',2008:'Global Financial Crisis',2020:'COVID-19 shock and policy response'};
+        const events={1934:'Gold Reserve Act revalues gold from $20.67 to $35 per ounce',1971:'End of US dollar convertibility into gold',1980:'Inflation and gold cycle peak',2008:'Global Financial Crisis',2020:'COVID-19 shock and policy response'};
         const specs = [['sp500','S&P 500','#0077b6'],['housing','Housing','#8e44ad'],['bond','Bonds','#00a676'],['gold','Gold','#d49b00'],['inflation','Cash purchasing power','#607d8b']];
         goldChartInstance = new Chart(ctx,{type:'line',data:{labels:years,datasets:specs.map(([key,label,color])=>({label,data:compoundSeries(key),borderColor:color,backgroundColor:color,pointBackgroundColor:years.map(y=>events[y]?'#f44336':color),pointRadius:years.map(y=>events[y]?6:1.5),pointHoverRadius:7,spanGaps:false,borderWidth:key==='sp500'?3:2,tension:0.15}))},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{tooltip:{callbacks:{label:c=>`${c.dataset.label}: $${c.parsed.y.toLocaleString(undefined,{maximumFractionDigits:2})}`,afterBody:items=>{const y=items[0]?.label;return events[y]?`EVENT: ${events[y]}`:'';}}}},scales:{x:{title:{display:true,text:'Year'}},y:{type:'logarithmic',title:{display:true,text:'Growth of $100 (log scale)'},ticks:{callback:v=>'$'+Number(v).toLocaleString()}}}}});
     }
