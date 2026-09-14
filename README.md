@@ -18,7 +18,7 @@ Dataset Sources:
 **Companion dataset:** `investment_returns.csv` (repo root and `v2/data/`)  
 **Coverage:** Calendar years 1926–2025 plus a 2026 year-to-date row  
 **Columns:** Inflation, S&P 500, Housing, Bonds, and Gold  
-**Documentation date:** September 11, 2026
+**Documentation date:** September 11, 2026 (Bond and Gold columns re-sourced September 13, 2026 — see sections 6 and 9)
 
 ---
 
@@ -54,6 +54,8 @@ The historical data through 2025 originated from a compiled dataset credited to 
 The supplied description states that the dataset brings together annual data on inflation, the S&P 500, housing, bonds, and gold to measure the one-year outcome of investing $100 at the beginning of each year.
 
 ### Upstream sources cited by the original dataset compiler
+
+> **Superseded for Bonds and Gold.** The Bond and Gold columns below are the compiler's original citations, kept for the record. Since September 13, 2026 both columns come from different first-party sources, described in sections 6 and 9. Inflation, S&P 500, and Housing are unchanged.
 
 #### Inflation
 
@@ -101,8 +103,10 @@ The following changes were made after the original download:
 4. Filled missing Bond values for 2021–2025.
 5. Added a complete 2026 YTD row for Inflation, S&P 500, Housing, Bonds, and Gold.
 6. Preserved the remaining original historical values unless specifically identified as corrected or added.
+7. **September 13, 2026:** Re-sourced the entire Bond column (1926–2025) so that it follows one 10-year Treasury methodology. See section 6.
+8. **September 13, 2026:** Re-sourced the entire Gold column (1926–2026 YTD) from annual-average prices to year-end prices. See section 9.
 
-The completed dataset contains every calendar year from 1926 through 2025, followed by one 2026 YTD row.
+The completed dataset contains every calendar year from 1926 through 2025, followed by one 2026 YTD row. Each year's Bond and Gold inputs (source, dates, prices) are recorded in `docs/sources/bond_gold_source_values.csv`.
 
 ---
 
@@ -112,9 +116,11 @@ The original downloaded CSV skipped directly from 1959 to 1961. The following ro
 
 | Year | Inflation | S&P 500 | Housing | Bonds | Gold |
 |---:|---:|---:|---:|---:|---:|
-| 1960 | -1.46% | 0.47% | 4.74% | 11.64% | 0.48% |
+| 1960 | -1.46% | 0.47% | 4.74% | 11.64% | 0.00% |
 
 ### Source treatment for 1960
+
+The 1960 Gold value was restated from 0.48% to 0.00% on September 13, 2026, when the Gold column moved to year-end prices. Gold's official U.S. price was $35.00 at both year-end 1959 and year-end 1960 (section 9). The 1960 Bond value (11.64%) is NYU Stern's figure, which the whole Bond column now uses (section 6).
 
 The restored values follow the conventions of the supplied long-run dataset. The 1960 bond-return cross-check is supported by the New York University Stern historical-return dataset listed below. However, because the original compiler's exact data-processing workbook or code was not supplied, the restored 1960 row should be understood as a reconstruction under the historical dataset's conventions rather than a verbatim recovery from the original downloadable file.
 
@@ -164,25 +170,51 @@ The Housing return is a change in a national home-price index. It is not a full 
 
 ---
 
-## 6. Bond Additions, 2021–2026 YTD
+## 6. Bonds, 1926–2026 YTD (re-sourced September 13, 2026)
 
-### Full-year values for 2021–2025
+### Why the column was re-sourced
 
-- **Source:** Aswath Damodaran, New York University Stern School of Business, Historical Returns on Stocks, Bonds and Bills
-- **Series:** U.S. 10-year Treasury bond annual total return
+Before this change the Bond column combined three different series:
+
+- 1926–1959 and 1961–2020 came from the Jordà-Schularick-Taylor (JST) Macrohistory Database, USA `bond_tr`. JST uses a longer-duration government bond (e.g. 2011: 25.34%, 2014: 24.39%).
+- 1960 was the NYU Stern 10-year figure (JST gives 13.14%).
+- 2021–2025 were NYU Stern 10-year figures, because JST Release 6 ends in 2020.
+
+The column therefore switched bond duration twice, and the README didn't say so. JST R6 also publishes the same value, 11.87%, for both 2019 and 2020; Stern's 10-year returns for those years are 9.64% and 11.33%.
+
+### Source, 1928–2025 (98 years)
+
+- **Source:** Aswath Damodaran, New York University Stern School of Business, *Historical Returns on Stocks, Bonds and Bills: 1928–2025*
+- **Series:** "US T. Bond (10-year)", sheet "Returns by year"
+- **Method (as stated by the source):** 10-year constant-maturity Treasury yields from FRED. Each year's return reprices a par bond issued at the prior year-end yield using the new year-end yield, and adds the coupon.
 - **URL:** https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/histretSP.html
+- **File:** https://pages.stern.nyu.edu/~adamodar/pc/datasets/histretSP.xls, retrieved September 13, 2026, SHA-256 `28b8110916a15a4dcc11c87c6422510704608ddedcdfa67a1298abdc22e49c69`
+- **Rounding:** returns converted to percent and rounded half-up to two decimals
+
+### Source, 1926–1927 (2 years)
+
+Stern's series begins in 1928. For 1926 and 1927 the column keeps the JST values (5.29% and 3.72%):
+
+- **Source:** Òscar Jordà, Moritz Schularick, and Alan M. Taylor, Macrohistory Database, Release 6, USA `bond_tr`
+- **URL:** https://www.macrohistory.net/database/
+- **File:** `JSTdatasetR6.xlsx`, retrieved September 13, 2026, SHA-256 `c1bb91fe56ea50d4f27af5c0fc897d481e89ae38ce41eaecab62134c9354981d`
+
+The column therefore changes series between 1927 and 1928. JST's bond has a longer duration than Stern's constant-maturity 10-year bond.
 
 The bond return includes both coupon income and bond-price appreciation or depreciation. It is not the same as the quoted 10-year Treasury yield.
 
-### Values added
+### Selected values after re-sourcing
 
-| Year | Bond return |
-|---:|---:|
-| 2021 | -4.42% |
-| 2022 | -17.83% |
-| 2023 | 3.88% |
-| 2024 | -1.64% |
-| 2025 | 7.80% |
+| Year | Previous value | Current value |
+|---:|---:|---:|
+| 1934 | 10.88% | 7.96% |
+| 1982 | 36.34% | 32.81% |
+| 2011 | 25.34% | 16.04% |
+| 2019 | 11.87% | 9.64% |
+| 2020 | 11.87% | 11.33% |
+| 2021–2025 | unchanged | -4.42%, -17.83%, 3.88%, -1.64%, 7.80% |
+
+92 of 100 annual values changed. The previous and current value for every year can be compared with `git diff` on `investment_returns.csv`.
 
 ### 2026 YTD bond proxy
 
@@ -197,7 +229,7 @@ The annual NYU Stern series did not yet contain a 2026 observation. Therefore, t
 
 ### Bond-series limitation
 
-The 2021–2025 values use the NYU Stern 10-year Treasury methodology, while 2026 YTD uses the IEF 7-10 year Treasury ETF. IEF is a close, investable proxy, but it is not identical to the historical NYU series and includes fund expenses and portfolio-index mechanics.
+The 1928–2025 values use the NYU Stern 10-year Treasury methodology, while 2026 YTD uses the IEF 7-10 year Treasury ETF. IEF is a close, investable proxy, but it is not identical to the historical NYU series and includes fund expenses and portfolio-index mechanics.
 
 ---
 
@@ -238,19 +270,48 @@ This figure is a total return, not merely the change in the S&P 500 price index.
 
 ---
 
-## 9. Gold, 2026 YTD
+## 9. Gold, 1926–2026 YTD (re-sourced September 13, 2026)
 
-### Sources
+### Why the column was re-sourced
 
-- **December 31, 2025 gold price:** https://goldprice.org/gold-price-today/2025-12-31
-- **September 10, 2026 gold price:** https://goldprice.org/gold-price-today/2026-09-10
+The original Gold column (DataHub/GitHub `gold-prices` annual file, which uses World Bank annual averages from 1960 on) measured the change in the **annual-average** price. That doesn't match this dataset's stated purpose in section 1: $100 invested at the start of a year and valued at its end. The other columns measure start-to-end of year, and so did the previous 2026 YTD gold value, which was point-to-point. Two further errors in the original column:
 
-### Calculation
+- 1960 had been filled with a year-end-based figure (0.48%) inside an otherwise average-based column.
+- The original 1961 value (-0.28%) was really the two-year change from 1959 to 1961, because the source file has no 1960 row.
 
-- December 31, 2025 closing price: $4,339.65 per ounce
-- September 10, 2026 closing price: $4,393.91 per ounce
-- Calculation: `(4,393.91 / 4,339.65) - 1 = 1.25%`, rounded
-- **2026 YTD return:** 1.25%
+### Method
+
+`Gold return for year Y = (year-end price Y / year-end price Y-1) - 1`, rounded half-up to two decimals.
+
+| Period | Year-end price used | Source |
+|---|---|---|
+| 1925–1933 | $20.67 per troy ounce, the U.S. official gold price | Federal Reserve History, "Gold Reserve Act of 1934": https://www.federalreservehistory.org/essays/gold-reserve-act |
+| 1934–1967 | $35.00 per troy ounce, the U.S. official price set by presidential proclamation on January 31, 1934, the day after the Gold Reserve Act was signed | Same source |
+| 1968–2025 | The last LBMA Gold Price PM (USD) fixing published in each calendar year | LBMA (London Bullion Market Association), https://www.lbma.org.uk/prices-and-data/lbma-precious-metal-prices ; data file `https://prices.lbma.org.uk/json/gold_pm.json`, retrieved September 13, 2026, SHA-256 `1055e6f4e1ddf107d8c34591f97e9130dec2fa1339a73143d5ac8ba56fe67467` |
+| 2026 YTD | LBMA Gold Price PM, 2025-12-30 ($4,367.80) to 2026-09-11 ($4,386.25) | Same LBMA file |
+
+Each year's start and end dates and prices are listed in `docs/sources/bond_gold_source_values.csv`.
+
+### Treatment notes
+
+- **1933–1934 revaluation.** The U.S. left the fixed $20.67 price in the spring of 1933, but the legal price did not change until January 31, 1934. Under the year-end official-price rule, the whole revaluation shows up in 1934 (+69.33%) and 1933 shows 0.00%. Treat it as a change in the official price, not a return an American investor could have earned. Federal Reserve History notes that the program "which began in 1933, first restricted the private use of gold."
+- **Pre-1968 values are official prices, not market prices.** From 1934 to 1967 the official price was fixed, so the column shows 0.00% for those years. Free-market prices outside the U.S. could differ somewhat.
+- **1967–1968 transition.** LBMA's published series begins on 1968-04-01. The London gold market closed on March 15, 1968 and reopened on April 1 under a two-tier system: official transactions stayed at $35, while the private market price floated (LBMA, "March 1968 and the London Gold Fixing": https://www.lbma.org.uk/wonders-of-gold/items/march-1968-and-the-london-gold-fixing). The 1968 return is measured from the $35.00 official price at year-end 1967 to the LBMA PM fixing on 1968-12-31 ($41.90): +19.71%.
+- **Choice of fixing.** LBMA publishes AM and PM fixings. This column always uses the last PM fixing of the year. When no PM fixing is held on December 31 (common because of the shortened year-end trading day), the last PM fixing before it is used, e.g. 2024-12-30 and 2025-12-30. NYU Stern's gold year-end prices mix AM, PM, and averaged values, so this column's values will differ slightly from Stern's (e.g. 2025: 67.41% here vs. 66.22% at Stern).
+
+### Selected values after re-sourcing
+
+| Year | Previous value (annual-average basis) | Current value (year-end basis) |
+|---:|---:|---:|
+| 1933 | 27.26% | 0.00% |
+| 1934 | 31.75% | 69.33% |
+| 1979 | 58.90% | 126.55% |
+| 1980 | 98.26% | 15.19% |
+| 2024 | 22.89% | 25.53% |
+| 2025 | 44.16% | 67.41% |
+| 2026 YTD | 1.25% (GoldPrice.org) | 0.42% (LBMA) |
+
+92 of 101 values changed.
 
 ### Interpretation
 
@@ -262,7 +323,7 @@ The calculation represents price appreciation only. It does not include storage,
 
 | Period | Inflation | S&P 500 | Housing | Bonds | Gold |
 |---|---:|---:|---:|---:|---:|
-| 2026 YTD | -3.37% | 12.67% | 0.18% | -2.63% | 1.25% |
+| 2026 YTD | -3.37% | 12.67% | 0.18% | -2.63% | 0.42% |
 
 ---
 
@@ -275,7 +336,7 @@ The 2026 YTD row does not use a single common observation date. It uses the late
 | Housing | June 2026 |
 | Inflation | August 2026 |
 | Bonds | September 10, 2026 |
-| Gold | September 10, 2026 |
+| Gold | September 11, 2026 (LBMA PM fixing) |
 | S&P 500 | September 11, 2026 |
 
 Therefore, the 2026 YTD row is a latest-available snapshot, not a perfectly synchronized same-date comparison. Any chart, game, analysis, or publication using this row should display this limitation.
@@ -286,10 +347,11 @@ Therefore, the 2026 YTD row is a latest-available snapshot, not a perfectly sync
 
 | Period | Inflation | S&P 500 | Housing | Bonds | Gold |
 |---|---|---|---|---|---|
-| 1926–2020 | Macrotrends, as cited by Brady Xue | SlickCharts, as cited by Brady Xue | Macrohistory Database, as cited by Brady Xue | Macrohistory Database, as cited by Brady Xue | GitHub/DataHub annual gold series, as cited by Brady Xue |
-| 2021–2025 | Original Brady Xue dataset | Original Brady Xue dataset | FRED Case-Shiller calculation added during update | NYU Stern 10-year Treasury returns added during update | Original Brady Xue dataset |
-| 2026 YTD | BLS CPI-U calculation | ChartRow total return | FRED Case-Shiller calculation | iShares IEF NAV total return proxy | GoldPrice.org price calculation |
-
+| 1926–1927 | Macrotrends, as cited by Brady Xue | SlickCharts, as cited by Brady Xue | Macrohistory Database, as cited by Brady Xue | JST Macrohistory Database R6 `bond_tr` | U.S. official gold price $20.67 (Federal Reserve History) |
+| 1928–1967 | Macrotrends, as cited by Brady Xue | SlickCharts, as cited by Brady Xue | Macrohistory Database, as cited by Brady Xue | NYU Stern 10-year Treasury return | U.S. official gold price: $20.67, then $35.00 from Jan 31, 1934 (Federal Reserve History) |
+| 1968–2020 | Macrotrends, as cited by Brady Xue | SlickCharts, as cited by Brady Xue | Macrohistory Database, as cited by Brady Xue | NYU Stern 10-year Treasury return | LBMA Gold Price PM, last fixing of each year |
+| 2021–2025 | Original Brady Xue dataset | Original Brady Xue dataset | FRED Case-Shiller calculation added during update | NYU Stern 10-year Treasury return | LBMA Gold Price PM, last fixing of each year |
+| 2026 YTD | BLS CPI-U calculation | ChartRow total return | FRED Case-Shiller calculation | iShares IEF NAV total return proxy | LBMA Gold Price PM, 2025-12-30 to 2026-09-11 |
 ---
 
 ## 13. Data-Quality and Comparability Limitations
@@ -300,8 +362,10 @@ Therefore, the 2026 YTD row is a latest-available snapshot, not a perfectly sync
 4. **Inflation uses a negative sign convention:** Negative values represent purchasing-power erosion rather than the conventional published inflation rate.
 5. **Historical and extension methodologies differ:** The 2021–2026 additions use sources selected to complete missing observations, not necessarily the exact processing methodology used by the original compiler.
 6. **2026 YTD dates differ:** The latest available observation date varies by column.
-7. **Rounding:** Values in the CSV are generally rounded to two decimal places.
-8. **No investment advice:** Historical returns do not guarantee future results, and the dataset does not account for taxes, costs, fees, liquidity, leverage, or individual circumstances.
+7. **Bond series change at 1928:** 1926–1927 use JST's longer-duration government bond return; 1928 onward uses NYU Stern's 10-year constant-maturity Treasury return. The 2026 YTD bond value is an IEF (7–10 year) proxy.
+8. **Gold before 1968 is an official price:** 1926–1967 gold returns come from the U.S. official price ($20.67, then $35.00), not a free-market price, so every year is 0.00% except the 1934 revaluation (+69.33%).
+9. **Rounding:** Values in the CSV are generally rounded to two decimal places.
+10. **No investment advice:** Historical returns do not guarantee future results, and the dataset does not account for taxes, costs, fees, liquidity, leverage, or individual circumstances.
 
 ---
 
@@ -309,7 +373,7 @@ Therefore, the 2026 YTD row is a latest-available snapshot, not a perfectly sync
 
 Suggested citation for the completed dataset:
 
-> Xue, Brady, compiler. *1926-2025 Investment Commodities Comparison by Year*. Historical data compiled from Macrotrends, SlickCharts, the Jordà-Schularick-Taylor Macrohistory Database, and the DataHub/GitHub Gold Prices dataset. Corrected to restore 1960 and extended through 2026 YTD using BLS CPI-U, ChartRow S&P 500 total return, S&P Cotality Case-Shiller data through FRED, iShares IEF NAV total return, and GoldPrice.org. Updated September 11, 2026.
+> Xue, Brady, compiler. *1926-2025 Investment Commodities Comparison by Year*. Historical data compiled from Macrotrends, SlickCharts, the Jordà-Schularick-Taylor Macrohistory Database, and the DataHub/GitHub Gold Prices dataset. Corrected to restore 1960 and extended through 2026 YTD using BLS CPI-U, ChartRow S&P 500 total return, S&P Cotality Case-Shiller data through FRED, and iShares IEF NAV total return. Bond column re-sourced from NYU Stern (Damodaran) 10-year Treasury returns (1928–2025) and the JST Macrohistory Database (1926–1927); Gold column re-sourced to year-end prices from the U.S. official gold price (1926–1967) and the LBMA Gold Price PM (1968–2026 YTD). Updated September 13, 2026.
 
 ---
 
@@ -320,7 +384,7 @@ Suggested citation for the completed dataset:
 - Macrotrends Inflation: https://www.macrotrends.net/datasets/2497/historical-inflation-rate-by-year
 - SlickCharts S&P 500 Returns: https://www.slickcharts.com/sp500/returns
 - Macrohistory Database: https://www.macrohistory.net/database/
-- Gold Prices Annual CSV: https://github.com/datasets/gold-prices/blob/main/data/annual.csv
+- Gold Prices Annual CSV (superseded September 13, 2026): https://github.com/datasets/gold-prices/blob/main/data/annual.csv
 
 ### Correction and extension sources
 
@@ -331,8 +395,16 @@ Suggested citation for the completed dataset:
 - FRED Case-Shiller National Home Price Index: https://fred.stlouisfed.org/data/CSUSHPISA
 - iShares IEF: https://www.ishares.com/us/products/239456/ishares-710-year-treasury-bond-etf
 - ChartRow S&P 500 YTD Return: https://chartrow.com/sp500/ytd
-- Gold Price, December 31, 2025: https://goldprice.org/gold-price-today/2025-12-31
-- Gold Price, September 10, 2026: https://goldprice.org/gold-price-today/2026-09-10
+
+### Bond and Gold re-sourcing sources (September 13, 2026)
+
+- NYU Stern Historical Returns spreadsheet: https://pages.stern.nyu.edu/~adamodar/pc/datasets/histretSP.xls
+- JST Macrohistory Database, Release 6: https://www.macrohistory.net/database/
+- LBMA Precious Metal Prices: https://www.lbma.org.uk/prices-and-data/lbma-precious-metal-prices
+- LBMA Gold Price PM data file: https://prices.lbma.org.uk/json/gold_pm.json
+- LBMA, March 1968 and the London Gold Fixing: https://www.lbma.org.uk/wonders-of-gold/items/march-1968-and-the-london-gold-fixing
+- Federal Reserve History, Gold Reserve Act of 1934: https://www.federalreservehistory.org/essays/gold-reserve-act
+- Per-year inputs: `docs/sources/bond_gold_source_values.csv`
 
 
 2. Download: spy_historical.csv

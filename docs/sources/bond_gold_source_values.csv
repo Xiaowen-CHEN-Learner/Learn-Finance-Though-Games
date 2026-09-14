@@ -1,0 +1,102 @@
+Year,Bond_Return,Bond_Source,Gold_Start_Date,Gold_Start_Price_USD,Gold_End_Date,Gold_End_Price_USD,Gold_Price_Source,Gold_Return
+1926,5.29,"JST Macrohistory Database R6, USA bond_tr",1925-12-31,20.67,1926-12-31,20.67,"US statutory gold price (Federal Reserve History, Gold Reserve Act of 1934)",0
+1927,3.72,"JST Macrohistory Database R6, USA bond_tr",1926-12-31,20.67,1927-12-31,20.67,"US statutory gold price (Federal Reserve History, Gold Reserve Act of 1934)",0
+1928,0.84,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1927-12-31,20.67,1928-12-31,20.67,"US statutory gold price (Federal Reserve History, Gold Reserve Act of 1934)",0
+1929,4.2,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1928-12-31,20.67,1929-12-31,20.67,"US statutory gold price (Federal Reserve History, Gold Reserve Act of 1934)",0
+1930,4.54,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1929-12-31,20.67,1930-12-31,20.67,"US statutory gold price (Federal Reserve History, Gold Reserve Act of 1934)",0
+1931,-2.56,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1930-12-31,20.67,1931-12-31,20.67,"US statutory gold price (Federal Reserve History, Gold Reserve Act of 1934)",0
+1932,8.79,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1931-12-31,20.67,1932-12-31,20.67,"US statutory gold price (Federal Reserve History, Gold Reserve Act of 1934)",0
+1933,1.86,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1932-12-31,20.67,1933-12-31,20.67,"US statutory gold price (Federal Reserve History, Gold Reserve Act of 1934)",0
+1934,7.96,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1933-12-31,20.67,1934-12-31,35,"US statutory gold price (Federal Reserve History, Gold Reserve Act of 1934) -> US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History)",69.33
+1935,4.47,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1934-12-31,35,1935-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1936,5.02,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1935-12-31,35,1936-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1937,1.38,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1936-12-31,35,1937-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1938,4.21,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1937-12-31,35,1938-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1939,4.41,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1938-12-31,35,1939-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1940,5.4,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1939-12-31,35,1940-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1941,-2.02,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1940-12-31,35,1941-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1942,2.29,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1941-12-31,35,1942-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1943,2.49,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1942-12-31,35,1943-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1944,2.58,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1943-12-31,35,1944-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1945,3.8,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1944-12-31,35,1945-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1946,3.13,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1945-12-31,35,1946-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1947,0.92,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1946-12-31,35,1947-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1948,1.95,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1947-12-31,35,1948-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1949,4.66,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1948-12-31,35,1949-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1950,0.43,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1949-12-31,35,1950-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1951,-0.3,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1950-12-31,35,1951-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1952,2.27,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1951-12-31,35,1952-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1953,4.14,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1952-12-31,35,1953-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1954,3.29,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1953-12-31,35,1954-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1955,-1.34,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1954-12-31,35,1955-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1956,-2.26,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1955-12-31,35,1956-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1957,6.8,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1956-12-31,35,1957-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1958,-2.1,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1957-12-31,35,1958-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1959,-2.65,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1958-12-31,35,1959-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1960,11.64,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1959-12-31,35,1960-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1961,2.06,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1960-12-31,35,1961-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1962,5.69,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1961-12-31,35,1962-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1963,1.68,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1962-12-31,35,1963-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1964,3.73,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1963-12-31,35,1964-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1965,0.72,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1964-12-31,35,1965-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1966,2.91,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1965-12-31,35,1966-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1967,-1.58,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1966-12-31,35,1967-12-31,35,US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History),0
+1968,3.27,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1967-12-31,35,1968-12-31,41.9,"US official gold price set by presidential proclamation 31 Jan 1934 (Federal Reserve History) -> LBMA Gold Price PM (USD), last fixing of the period",19.71
+1969,-5.01,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1968-12-31,41.9,1969-12-31,35.2,"LBMA Gold Price PM (USD), last fixing of the period",-15.99
+1970,16.75,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1969-12-31,35.2,1970-12-31,37.38,"LBMA Gold Price PM (USD), last fixing of the period",6.19
+1971,9.79,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1970-12-31,37.38,1971-12-31,43.63,"LBMA Gold Price PM (USD), last fixing of the period",16.72
+1972,2.82,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1971-12-31,43.63,1972-12-29,64.9,"LBMA Gold Price PM (USD), last fixing of the period",48.75
+1973,3.66,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1972-12-29,64.9,1973-12-31,112.25,"LBMA Gold Price PM (USD), last fixing of the period",72.96
+1974,1.99,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1973-12-31,112.25,1974-12-31,186.5,"LBMA Gold Price PM (USD), last fixing of the period",66.15
+1975,3.61,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1974-12-31,186.5,1975-12-31,140.25,"LBMA Gold Price PM (USD), last fixing of the period",-24.8
+1976,15.98,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1975-12-31,140.25,1976-12-31,134.5,"LBMA Gold Price PM (USD), last fixing of the period",-4.1
+1977,1.29,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1976-12-31,134.5,1977-12-30,164.95,"LBMA Gold Price PM (USD), last fixing of the period",22.64
+1978,-0.78,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1977-12-30,164.95,1978-12-29,226,"LBMA Gold Price PM (USD), last fixing of the period",37.01
+1979,0.67,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1978-12-29,226,1979-12-28,512,"LBMA Gold Price PM (USD), last fixing of the period",126.55
+1980,-2.99,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1979-12-28,512,1980-12-30,589.75,"LBMA Gold Price PM (USD), last fixing of the period",15.19
+1981,8.2,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1980-12-30,589.75,1981-12-30,397.5,"LBMA Gold Price PM (USD), last fixing of the period",-32.6
+1982,32.81,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1981-12-30,397.5,1982-12-30,456.9,"LBMA Gold Price PM (USD), last fixing of the period",14.94
+1983,3.2,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1982-12-30,456.9,1983-12-29,382.4,"LBMA Gold Price PM (USD), last fixing of the period",-16.31
+1984,13.73,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1983-12-29,382.4,1984-12-31,308.3,"LBMA Gold Price PM (USD), last fixing of the period",-19.38
+1985,25.71,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1984-12-31,308.3,1985-12-30,326.8,"LBMA Gold Price PM (USD), last fixing of the period",6
+1986,24.28,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1985-12-30,326.8,1986-12-30,388.75,"LBMA Gold Price PM (USD), last fixing of the period",18.96
+1987,-4.96,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1986-12-30,388.75,1987-12-30,484.1,"LBMA Gold Price PM (USD), last fixing of the period",24.53
+1988,8.22,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1987-12-30,484.1,1988-12-29,410.25,"LBMA Gold Price PM (USD), last fixing of the period",-15.26
+1989,17.69,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1988-12-29,410.25,1989-12-28,398.6,"LBMA Gold Price PM (USD), last fixing of the period",-2.84
+1990,6.24,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1989-12-28,398.6,1990-12-28,386.2,"LBMA Gold Price PM (USD), last fixing of the period",-3.11
+1991,15,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1990-12-28,386.2,1991-12-30,353.15,"LBMA Gold Price PM (USD), last fixing of the period",-8.56
+1992,9.36,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1991-12-30,353.15,1992-12-30,332.9,"LBMA Gold Price PM (USD), last fixing of the period",-5.73
+1993,14.21,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1992-12-30,332.9,1993-12-30,391.75,"LBMA Gold Price PM (USD), last fixing of the period",17.68
+1994,-8.04,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1993-12-30,391.75,1994-12-29,383.25,"LBMA Gold Price PM (USD), last fixing of the period",-2.17
+1995,23.48,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1994-12-29,383.25,1995-12-28,387,"LBMA Gold Price PM (USD), last fixing of the period",0.98
+1996,1.43,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1995-12-28,387,1996-12-30,369.25,"LBMA Gold Price PM (USD), last fixing of the period",-4.59
+1997,9.94,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1996-12-30,369.25,1997-12-30,290.2,"LBMA Gold Price PM (USD), last fixing of the period",-21.41
+1998,14.92,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1997-12-30,290.2,1998-12-30,287.8,"LBMA Gold Price PM (USD), last fixing of the period",-0.83
+1999,-8.25,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1998-12-30,287.8,1999-12-30,290.25,"LBMA Gold Price PM (USD), last fixing of the period",0.85
+2000,16.66,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",1999-12-30,290.25,2000-12-28,274.45,"LBMA Gold Price PM (USD), last fixing of the period",-5.44
+2001,5.57,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2000-12-28,274.45,2001-12-28,276.5,"LBMA Gold Price PM (USD), last fixing of the period",0.75
+2002,15.12,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2001-12-28,276.5,2002-12-30,347.2,"LBMA Gold Price PM (USD), last fixing of the period",25.57
+2003,0.38,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2002-12-30,347.2,2003-12-30,416.25,"LBMA Gold Price PM (USD), last fixing of the period",19.89
+2004,4.49,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2003-12-30,416.25,2004-12-30,435.6,"LBMA Gold Price PM (USD), last fixing of the period",4.65
+2005,2.87,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2004-12-30,435.6,2005-12-29,513,"LBMA Gold Price PM (USD), last fixing of the period",17.77
+2006,1.96,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2005-12-29,513,2006-12-28,632,"LBMA Gold Price PM (USD), last fixing of the period",23.2
+2007,10.21,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2006-12-28,632,2007-12-28,833.75,"LBMA Gold Price PM (USD), last fixing of the period",31.92
+2008,20.1,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2007-12-28,833.75,2008-12-30,869.75,"LBMA Gold Price PM (USD), last fixing of the period",4.32
+2009,-11.12,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2008-12-30,869.75,2009-12-30,1087.5,"LBMA Gold Price PM (USD), last fixing of the period",25.04
+2010,8.46,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2009-12-30,1087.5,2010-12-30,1405.5,"LBMA Gold Price PM (USD), last fixing of the period",29.24
+2011,16.04,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2010-12-30,1405.5,2011-12-29,1531,"LBMA Gold Price PM (USD), last fixing of the period",8.93
+2012,2.97,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2011-12-29,1531,2012-12-28,1657.5,"LBMA Gold Price PM (USD), last fixing of the period",8.26
+2013,-9.1,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2012-12-28,1657.5,2013-12-30,1204.5,"LBMA Gold Price PM (USD), last fixing of the period",-27.33
+2014,10.75,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2013-12-30,1204.5,2014-12-30,1206,"LBMA Gold Price PM (USD), last fixing of the period",0.12
+2015,1.28,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2014-12-30,1206,2015-12-30,1060,"LBMA Gold Price PM (USD), last fixing of the period",-12.11
+2016,0.69,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2015-12-30,1060,2016-12-29,1145.9,"LBMA Gold Price PM (USD), last fixing of the period",8.1
+2017,2.8,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2016-12-29,1145.9,2017-12-28,1291,"LBMA Gold Price PM (USD), last fixing of the period",12.66
+2018,-0.02,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2017-12-28,1291,2018-12-28,1279,"LBMA Gold Price PM (USD), last fixing of the period",-0.93
+2019,9.64,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2018-12-28,1279,2019-12-30,1514.75,"LBMA Gold Price PM (USD), last fixing of the period",18.43
+2020,11.33,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2019-12-30,1514.75,2020-12-30,1887.6,"LBMA Gold Price PM (USD), last fixing of the period",24.61
+2021,-4.42,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2020-12-30,1887.6,2021-12-30,1805.85,"LBMA Gold Price PM (USD), last fixing of the period",-4.33
+2022,-17.83,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2021-12-30,1805.85,2022-12-29,1813.75,"LBMA Gold Price PM (USD), last fixing of the period",0.44
+2023,3.88,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2022-12-29,1813.75,2023-12-28,2078.4,"LBMA Gold Price PM (USD), last fixing of the period",14.59
+2024,-1.64,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2023-12-28,2078.4,2024-12-30,2609.1,"LBMA Gold Price PM (USD), last fixing of the period",25.53
+2025,7.8,"NYU Stern (Damodaran) histretSP, US T. Bond (10-year)",2024-12-30,2609.1,2025-12-30,4367.8,"LBMA Gold Price PM (USD), last fixing of the period",67.41
+2026 YTD,-2.63,iShares IEF NAV total return YTD to 2026-09-10 (unchanged),2025-12-30,4367.8,2026-09-11,4386.25,"LBMA Gold Price PM (USD), last fixing of the period",0.42
