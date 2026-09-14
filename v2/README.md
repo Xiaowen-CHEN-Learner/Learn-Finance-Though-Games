@@ -55,9 +55,10 @@ No personal or identifying data is stored. A level (Retail Investor → Junior A
 ## Module scoring, briefly
 
 - **Trading:** score = capital-preservation (how far the portfolio dipped below its starting value at its worst point), reported separately from a "risk posture" label and the realized outcome — explicitly framed as hindsight, not something knowable at decision time.
-- **Bias / Poker:** score = % correct.
-- **Growth / SPY:** passive/informational; credited on first render.
-- **Gambler's Ruin:** credited after a short comprehension check on *why* a fair-odds game still loses money (the expense-ratio drag), taken after ruin or 30 trials.
+- **Bias:** score = % correct on your *first* answer to each question. You can go back and re-answer after reading the explanation, but that doesn't change the score.
+- **Poker:** score = % correct (one answer per hand).
+- **Growth / SPY:** passive/informational; credited 100 each time the module is opened.
+- **Gambler's Ruin:** after ruin or 30 trials, a short comprehension check asks *why* a fair-odds game still loses money (the expense-ratio drag). A correct answer scores 100, a wrong one 0. The end-of-round message reflects whether you actually finished up or down. 10x bets stop at the 30-trial limit.
 
 ## Known limitations
 

@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js" integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -34,7 +34,7 @@
     <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="tab-home" id="tabbtn-home" data-tab="tab-home">Home</button>
     <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-trading" tabindex="-1" id="tabbtn-trading" data-tab="tab-trading">1. Event-Driven Trading</button>
     <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-bias" tabindex="-1" id="tabbtn-bias" data-tab="tab-bias">2. Cognitive Bias</button>
-    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-growth" tabindex="-1" id="tabbtn-growth" data-tab="tab-growth">3. Long-Term Asset Growth</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-growth" tabindex="-1" id="tabbtn-growth" data-tab="tab-growth">3. Asset Price History</button>
     <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-spy" tabindex="-1" id="tabbtn-spy" data-tab="tab-spy">4. SPY Macro Events</button>
     <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-gambler" tabindex="-1" id="tabbtn-gambler" data-tab="tab-gambler">5. Gambler's Ruin</button>
     <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-poker" tabindex="-1" id="tabbtn-poker" data-tab="tab-poker">6. Expected Value (Poker)</button>
@@ -60,7 +60,7 @@
                 <p>Spot the cognitive biases behind 10 common investor traps, with a missed-concept review at the end.</p>
             </button>
             <button class="feature-card" type="button" onclick="App.openTab('tab-growth')">
-                <h3>Long-Term Asset Growth <span data-module-badge="growth"></span></h3>
+                <h3>Asset Price History <span data-module-badge="growth"></span></h3>
                 <p>Growth of $100 since 1926 across stocks, housing, bonds, gold, and cash — from the real annual-returns dataset.</p>
             </button>
             <button class="feature-card" type="button" onclick="App.openTab('tab-spy')">
@@ -87,7 +87,7 @@
     <!-- MODULE 1: TRADING -->
     <section id="tab-trading" class="tab-panel" role="tabpanel" aria-labelledby="tabbtn-trading">
         <h2>1. Event-Driven Trading</h2>
-        <p class="module-intro">Ten historic macro shocks. Each decision is scored on capital preservation and risk posture — not just on whether it happened to work out.</p>
+        <p class="module-intro">Ten historic macro shocks. Your score is capital preservation: how far your portfolio fell below $10,000 at its worst point. The report card also shows your risk posture. Each outcome reflects what actually happened next, which nobody could have known at the time.</p>
         <div id="game-area">
             <div class="stats">
                 <span id="round-counter">Round 1 of 10</span>
@@ -146,7 +146,7 @@
 
     <!-- MODULE 3: GROWTH -->
     <section id="tab-growth" class="tab-panel" role="tabpanel" aria-labelledby="tabbtn-growth">
-        <h2>3. Long-Term Asset Growth (1926 - 2026 YTD)</h2>
+        <h2>3. Asset Price History (1926 - 2026 YTD)</h2>
         <p class="module-intro">Growth of $100 compounded from real annual returns for the S&amp;P 500, housing, bonds, gold, and cash purchasing power. Vertical axis is logarithmic. Click a legend item to toggle it.</p>
         <div class="chart-container"><canvas id="goldChart" role="img" aria-label="Line chart of growth of $100 from 1926 to 2026 year-to-date across five asset classes"></canvas></div>
         <div class="chart-legend" id="growth-legend"></div>

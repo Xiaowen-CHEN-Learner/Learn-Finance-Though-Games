@@ -18,7 +18,9 @@
     ];
 
     let current = 0;
-    let answers = {};
+    // First answer per question is what gets scored; going back to re-answer after
+    // seeing the explanation is allowed for review but doesn't change the score.
+    let firstAnswers = {};
 
     function renderProgress() {
         document.getElementById('bias-q-num').textContent = `Assessment ${current + 1} of ${biasData.length}`;
@@ -43,7 +45,7 @@
 
     function decide(index) {
         const data = biasData[current];
-        answers[current] = index;
+        if (!(current in firstAnswers)) firstAnswers[current] = index;
         document.getElementById('bias-options').style.display = 'none';
         const fb = document.getElementById('bias-feedback');
         fb.style.display = 'block';
@@ -60,12 +62,12 @@
     function showEnd() {
         document.getElementById('bias-area').style.display = 'none';
         document.getElementById('bias-end').style.display = 'block';
-        const correctCount = biasData.filter((d, i) => answers[i] === d.correct).length;
+        const correctCount = biasData.filter((d, i) => firstAnswers[i] === d.correct).length;
         const score = Math.round((correctCount / biasData.length) * 100);
 
-        const missed = biasData.filter((d, i) => answers[i] !== d.correct);
+        const missed = biasData.filter((d, i) => firstAnswers[i] !== d.correct);
         let html = `<div class="report-card">
-            <div class="report-stat"><div class="label">Score</div><div class="value">${correctCount}/${biasData.length}</div><div class="meter"><div class="meter-fill" style="width:${score}%"></div></div></div>
+            <div class="report-stat"><div class="label">Score (first answers)</div><div class="value">${correctCount}/${biasData.length}</div><div class="meter"><div class="meter-fill" style="width:${score}%"></div></div></div>
         </div>`;
         if (missed.length) {
             html += `<div class="mastery-list"><h3>Concepts to review</h3><ul>${missed.map(m => `<li><strong>${m.tag}:</strong> ${m.explain}</li>`).join('')}</ul></div>`;
@@ -77,7 +79,7 @@
     }
 
     function resetBias() {
-        current = 0; answers = {};
+        current = 0; firstAnswers = {};
         document.getElementById('bias-end').style.display = 'none';
         document.getElementById('bias-area').style.display = 'block';
         loadRound();
