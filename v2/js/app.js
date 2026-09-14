@@ -138,7 +138,7 @@ const App = (() => {
             const key = el.getAttribute('data-module-badge');
             const mod = state.modules[key];
             el.innerHTML = mod && mod.attempts > 0
-                ? `<span class="badge-complete">Best: ${mod.bestScore}/100</span>`
+                ? `<span class="badge-complete">Best: ${Number(mod.bestScore) || 0}/100</span>`
                 : '';
         });
     }
@@ -146,15 +146,15 @@ const App = (() => {
     // ---- Tab navigation ----
     function openTab(tabId, opts) {
         opts = opts || {};
+        const panel = document.getElementById(tabId);
+        const btn = document.getElementById('tabbtn-' + tabId.replace('tab-', ''));
+        if (!panel || !btn) return;
         document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => {
             b.classList.remove('active');
             b.setAttribute('aria-selected', 'false');
             b.tabIndex = -1;
         });
-        const panel = document.getElementById(tabId);
-        const btn = document.getElementById('tabbtn-' + tabId.replace('tab-', ''));
-        if (!panel || !btn) return;
         panel.classList.add('active');
         btn.classList.add('active');
         btn.setAttribute('aria-selected', 'true');
@@ -182,7 +182,8 @@ const App = (() => {
             });
         });
         const fromHash = location.hash ? location.hash.slice(1) : null;
-        const valid = fromHash && document.getElementById(fromHash);
+        // Only tab ids count: the skip link leaves "#main" in the URL, which must not select a tab.
+        const valid = fromHash && fromHash.startsWith('tab-') && document.getElementById('tabbtn-' + fromHash.slice(4));
         openTab(valid ? fromHash : 'tab-home', { silent: true });
     }
 

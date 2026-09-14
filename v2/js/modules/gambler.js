@@ -6,18 +6,19 @@
  * comprehension check that feeds the progression score.
  */
 (function () {
-    let chart = null;
-    let wealth = 1000000, trials = 0, cumulativeExpense = 0;
-    let historyX = [0], historyY = [1000000];
-    let completed = false, checkAnswered = false;
-
+    const START_WEALTH = 1000000;
     const RUIN_THRESHOLD = 100000;
     const COMPLETE_TRIALS = 30;
 
+    let chart = null;
+    let wealth = START_WEALTH, trials = 0, cumulativeExpense = 0;
+    let historyX = [0], historyY = [START_WEALTH];
+    let completed = false, checkAnswered = false;
+
     const CHECK = {
-        q: 'You just lost money in a game with true 50/50 odds. Why?',
+        q: 'Every bet in this game had true 50/50 odds. Why is it still a losing game over the long run?',
         opts: [
-            'Bad luck — over many trials a fair game nets to about zero.',
+            'It isn\'t — over many trials a fair 50/50 game nets to about zero.',
             'Every wager paid a 1% expense ratio regardless of outcome, so the expected value of each bet was negative before the coin was even flipped.',
             'The odds were secretly worse than 50/50.',
         ],
@@ -51,7 +52,8 @@
 
     function play(times) {
         if (wealth <= RUIN_THRESHOLD || completed) return;
-        for (let i = 0; i < times; i++) {
+        const n = Math.min(times, COMPLETE_TRIALS - trials);
+        for (let i = 0; i < n; i++) {
             if (wealth <= RUIN_THRESHOLD) break;
             const wager = wealth * 0.10;
             const expense = wager * 0.01;
@@ -72,9 +74,17 @@
         completed = true;
         document.getElementById('gambler-active').style.display = 'none';
         document.getElementById('gambler-ruined').style.display = 'block';
-        document.getElementById('gambler-ruined-text').textContent = wealth <= RUIN_THRESHOLD
-            ? 'You lost 90% of your money! Math and expense ratios eventually win.'
-            : `After ${trials} trials, expense ratios have quietly eaten into your wealth even though wins and losses roughly balanced.`;
+        const change = wealth - START_WEALTH;
+        const costs = App.formatCurrency(cumulativeExpense);
+        let message;
+        if (wealth <= RUIN_THRESHOLD) {
+            message = 'You lost 90% of your money! Math and expense ratios eventually win.';
+        } else if (change < 0) {
+            message = `After ${trials} trials you're down ${App.formatCurrency(-change)}. Expense ratios alone cost you ${costs}.`;
+        } else {
+            message = `After ${trials} trials you're up ${App.formatCurrency(change)} — that's luck, not an edge. You still paid ${costs} in expense ratios, and every bet had negative expected value.`;
+        }
+        document.getElementById('gambler-ruined-text').textContent = message;
         renderCheck();
     }
 
@@ -97,12 +107,12 @@
         fb.style.display = 'block';
         fb.classList.toggle('negative', !correct);
         fb.innerHTML = `<h3>${correct ? 'Correct.' : 'Not quite.'}</h3><p>${CHECK.explain}</p>`;
-        App.recordModuleScore('gambler', correct ? 100 : 50);
+        App.recordModuleScore('gambler', correct ? 100 : 0);
     }
 
     function reset() {
-        wealth = 1000000; trials = 0; cumulativeExpense = 0;
-        historyX = [0]; historyY = [1000000];
+        wealth = START_WEALTH; trials = 0; cumulativeExpense = 0;
+        historyX = [0]; historyY = [START_WEALTH];
         completed = false; checkAnswered = false;
         document.getElementById('gambler-active').style.display = 'block';
         document.getElementById('gambler-ruined').style.display = 'none';
