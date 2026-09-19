@@ -1,5 +1,5 @@
 # Learn-Finance-Though-Games
-Website: https://xiaowen-chen-learner.github.io/Learn-Finance-Though-Games/
+Website: https://xiaowen-chen-learner.github.io/Learn-Finance-Though-Games/v2
 1. Event Trading: Aims at provide insight of how events trigger price
 2. Cognitive Bias: Help people understand the common biases
 3. Gold Inflation Chart: Help understand US finance history in the past 100 years
